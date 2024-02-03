@@ -44,22 +44,22 @@ class _HomePageState extends State<HomePage> {
                                   });
                                 }
                               },
-                              child: Text("Insert")),
+                              child: const Text("Insert")),
                           ElevatedButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text("Cancel")),
+                              child: const Text("Cancel")),
                         ],
-                        title: Text('Enter your task title'),
+                        title: const Text('Enter your task title'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextField(
                               controller: controller,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: "Task Title",
-                                border: const OutlineInputBorder(),
+                                border: OutlineInputBorder(),
                               ),
                             ),
                             Padding(
@@ -67,13 +67,13 @@ class _HomePageState extends State<HomePage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
+                                    const Text(
                                       "Importance Level:",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600),
                                     ),
                                     ListTile(
-                                      title: Text(
+                                      title: const Text(
                                         "High Importance",
                                         style: TextStyle(color: Colors.red),
                                       ),
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     ListTile(
-                                      title: Text(
+                                      title: const Text(
                                         "Normal Importance",
                                         style: TextStyle(color: Colors.orange),
                                       ),
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     ListTile(
-                                      title: Text(
+                                      title: const Text(
                                         "Low Importance",
                                         style: TextStyle(color: Colors.green),
                                       ),
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                         ));
                   }));
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -131,69 +131,99 @@ class _HomePageState extends State<HomePage> {
           children: List.generate(list.length, (index) {
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                    bottomLeft: Radius.circular(12),
-                    bottomRight: Radius.circular(12),
+              child: InkWell(
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+                onLongPress: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("Do you want to remove this task?"),
+                          actions: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("NO")),
+                            ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    box.deleteAt(index);
+                                    Navigator.pop(context);
+                                  });
+                                },
+                                child: const Text("YES")),
+                          ],
+                          actionsAlignment: MainAxisAlignment.spaceEvenly,
+                        );
+                      });
+                },
+                child: Card(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                    ),
                   ),
-                ),
-                child: SizedBox(
-                  width: MediaQuery.sizeOf(context).width,
-                  height: MediaQuery.sizeOf(context).height / 12,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Checkbox(
-                            value: list[index].isDone,
-                            onChanged: (value) {
-                              setState(() {
-                                final Box<Task> box = Hive.box<Task>("TaskBox");
-                                final Task task = box.values.toList()[index];
-                                task.isDone = value as bool;
-                                task.save();
-                                box.values.toList()[index].isDone = value as bool;
-                              });
-                            }),
-                        Flexible(
-                          flex: 20,
-                          child: Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  list[index].title,
-                                  style: const TextStyle(fontSize: 16),
-                                  overflow: TextOverflow.ellipsis,
+                  child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width,
+                    height: MediaQuery.sizeOf(context).height / 12,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Checkbox(
+                              value: list[index].isDone,
+                              onChanged: (value) {
+                                setState(() {
+                                  final Box<Task> box =
+                                      Hive.box<Task>("TaskBox");
+                                  final Task task = box.values.toList()[index];
+                                  task.isDone = value as bool;
+                                  task.save();
+                                  box.values.toList()[index].isDone =
+                                      value as bool;
+                                });
+                              }),
+                          Flexible(
+                            flex: 20,
+                            child: Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    list[index].title,
+                                    style: const TextStyle(fontSize: 16),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Container(
-                          width: 10,
-                          decoration: BoxDecoration(
-                            color: list[index].importanceLevel ==
-                                    ImportanceLevel.highImportance
-                                ? Colors.red
-                                : list[index].importanceLevel ==
-                                        ImportanceLevel.normalImportance
-                                    ? Colors.orange
-                                    : Colors.green,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(0),
-                              topRight: Radius.circular(12),
-                              bottomLeft: Radius.circular(0),
-                              bottomRight: Radius.circular(12),
+                              ],
                             ),
                           ),
-                        )
-                      ],
+                          const SizedBox(width: 8),
+                          Container(
+                            width: 10,
+                            decoration: BoxDecoration(
+                              color: list[index].importanceLevel ==
+                                      ImportanceLevel.highImportance
+                                  ? Colors.red
+                                  : list[index].importanceLevel ==
+                                          ImportanceLevel.normalImportance
+                                      ? Colors.orange
+                                      : Colors.green,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(0),
+                                topRight: Radius.circular(12),
+                                bottomLeft: Radius.circular(0),
+                                bottomRight: Radius.circular(12),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -205,6 +235,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
 // implement
 void insertNewTask(String text, ImportanceLevel importanceLevel) {
   final Task task = Task()
