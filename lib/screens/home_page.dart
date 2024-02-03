@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
     ImportanceLevel importanceLevel = ImportanceLevel.normalImportance;
     final Box<Task> box = Hive.box<Task>("TaskBox");
     final List<Task> list = box.values.toList();
-    print("log: $list");
+    print("log: ${list[1].isDone}");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -125,81 +125,87 @@ class _HomePageState extends State<HomePage> {
         },
         child: Icon(Icons.add),
       ),
-      body: Column(
-        children: List.generate(list.length, (index) {
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                  bottomLeft: Radius.circular(12),
-                  bottomRight: Radius.circular(12),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: List.generate(list.length, (index) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
+                  ),
                 ),
-              ),
-              child: SizedBox(
-                width: MediaQuery.sizeOf(context).width,
-                height: MediaQuery.sizeOf(context).height / 12,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Checkbox(
-                          value: list[index].isDone,
-                          onChanged: (value) {
-                            setState(() {
-                              final Box<Task> box = Hive.box<Task>("TaskBox");
-                              box.values.toList()[index].isDone = value as bool;
-                            });
-                          }),
-                      Flexible(
-                        flex: 20,
-                        child: Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                list[index].title,
-                                style: const TextStyle(fontSize: 16),
-                                overflow: TextOverflow.ellipsis,
+                child: SizedBox(
+                  width: MediaQuery.sizeOf(context).width,
+                  height: MediaQuery.sizeOf(context).height / 12,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Checkbox(
+                            value: list[index].isDone,
+                            onChanged: (value) {
+                              setState(() {
+                                final Box<Task> box = Hive.box<Task>("TaskBox");
+                                final Task task = box.values.toList()[index];
+                                task.isDone = value as bool;
+                                task.save();
+                                box.values.toList()[index].isDone = value as bool;
+                              });
+                            }),
+                        Flexible(
+                          flex: 20,
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  list[index].title,
+                                  style: const TextStyle(fontSize: 16),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        width: 10,
-                        decoration: BoxDecoration(
-                          color: list[index].importanceLevel ==
-                                  ImportanceLevel.highImportance
-                              ? Colors.red
-                              : list[index].importanceLevel ==
-                                      ImportanceLevel.normalImportance
-                                  ? Colors.orange
-                                  : Colors.green,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(0),
-                            topRight: Radius.circular(12),
-                            bottomLeft: Radius.circular(0),
-                            bottomRight: Radius.circular(12),
+                            ],
                           ),
                         ),
-                      )
-                    ],
+                        const SizedBox(width: 8),
+                        Container(
+                          width: 10,
+                          decoration: BoxDecoration(
+                            color: list[index].importanceLevel ==
+                                    ImportanceLevel.highImportance
+                                ? Colors.red
+                                : list[index].importanceLevel ==
+                                        ImportanceLevel.normalImportance
+                                    ? Colors.orange
+                                    : Colors.green,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(0),
+                              topRight: Radius.circular(12),
+                              bottomLeft: Radius.circular(0),
+                              bottomRight: Radius.circular(12),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
     );
   }
 }
-
+// implement
 void insertNewTask(String text, ImportanceLevel importanceLevel) {
   final Task task = Task()
     ..title = text
