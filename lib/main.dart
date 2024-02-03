@@ -9,6 +9,7 @@ import 'db/task_data.dart';
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TaskAdapter());
+  Hive.registerAdapter(ImportanceLevelAdapter());
   await Hive.openBox<Task>("TaskBox");
   runApp(const MyApp());
 }
