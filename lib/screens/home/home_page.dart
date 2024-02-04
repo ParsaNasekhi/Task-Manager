@@ -159,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                       });
                 },
                 onTap: () {
-                  Navigator.of(context).push(
+                  Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => EditPage(list[index], index)),);
                 },
                 child: Card(
