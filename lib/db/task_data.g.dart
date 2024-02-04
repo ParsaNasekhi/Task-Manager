@@ -19,19 +19,25 @@ class TaskAdapter extends TypeAdapter<Task> {
     return Task()
       ..title = fields[0] as String
       ..isDone = fields[1] as bool
-      ..importanceLevel = fields[2] as ImportanceLevel;
+      ..importanceLevel = fields[2] as ImportanceLevel
+      ..listName = fields[3] as String
+      ..details = fields[4] as String;
   }
 
   @override
   void write(BinaryWriter writer, Task obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
       ..write(obj.isDone)
       ..writeByte(2)
-      ..write(obj.importanceLevel);
+      ..write(obj.importanceLevel)
+      ..writeByte(3)
+      ..write(obj.listName)
+      ..writeByte(4)
+      ..write(obj.details);
   }
 
   @override
