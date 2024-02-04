@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/screens/home/edit_page.dart';
 
-import '../../db/task_data.dart';
+import '../../db/task/task_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

@@ -4,13 +4,16 @@ import 'package:task_manager/screens/done_page.dart';
 import 'package:task_manager/screens/home/home_page.dart';
 import 'package:task_manager/screens/lists_page.dart';
 
-import 'db/task_data.dart';
+import 'db/list/list_data.dart';
+import 'db/task/task_data.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TaskAdapter());
   Hive.registerAdapter(ImportanceLevelAdapter());
   await Hive.openBox<Task>("TaskBox");
+  Hive.registerAdapter(ListDataAdapter());
+  await Hive.openBox<ListData>("ListBox");
   runApp(const MyApp());
 }
 

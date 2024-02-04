@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/screens/home/home_page.dart';
 
-import '../../db/task_data.dart';
+import '../../db/task/task_data.dart';
 
 class EditPage extends StatefulWidget {
   final Task _task;

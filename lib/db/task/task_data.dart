@@ -15,7 +15,7 @@ class Task extends HiveObject {
   ImportanceLevel importanceLevel = ImportanceLevel.normalImportance;
 
   @HiveField(3)
-  String listName = "";
+  String listName = "default";
 
   @HiveField(4)
   String details = "";
