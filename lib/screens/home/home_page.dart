@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:task_manager/screens/home/edit_page.dart';
 
-import '../db/task_data.dart';
+import '../../db/task_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,7 +19,6 @@ class _HomePageState extends State<HomePage> {
     ImportanceLevel importanceLevel = ImportanceLevel.normalImportance;
     final Box<Task> box = Hive.box<Task>("TaskBox");
     final List<Task> list = box.values.toList();
-    print("log: ${list[1].isDone}");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -158,6 +158,10 @@ class _HomePageState extends State<HomePage> {
                         );
                       });
                 },
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => EditPage(list[index], index)),);
+                },
                 child: Card(
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
@@ -185,8 +189,7 @@ class _HomePageState extends State<HomePage> {
                                   final Task task = box.values.toList()[index];
                                   task.isDone = value as bool;
                                   task.save();
-                                  box.values.toList()[index].isDone =
-                                      value as bool;
+                                  box.values.toList()[index].isDone = value;
                                 });
                               }),
                           Flexible(
@@ -236,7 +239,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// implement
 void insertNewTask(String text, ImportanceLevel importanceLevel) {
   final Task task = Task()
     ..title = text
@@ -247,8 +249,6 @@ void insertNewTask(String text, ImportanceLevel importanceLevel) {
     final Box<Task> box = Hive.box<Task>("TaskBox");
     box.add(task); // insert
   }
-  // final Box<Task> tbox = Hive.box<Task>("TaskBox");
-  // final List<Task> list = tbox.values.toList();
   // print("log: ${list[0]}");
   // final Box<Task> box = Hive.box<Task>("TaskBox");
   // print(box.values.toList()[12].title);

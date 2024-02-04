@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/screens/done_page.dart';
-import 'package:task_manager/screens/home_page.dart';
+import 'package:task_manager/screens/home/home_page.dart';
 import 'package:task_manager/screens/lists_page.dart';
 
 import 'db/task_data.dart';
