@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 onTap: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => EditPage(list[index], index)),);
+                      MaterialPageRoute(builder: (context) => EditPage(list[index])),);
                 },
                 child: Card(
                   shape: const RoundedRectangleBorder(

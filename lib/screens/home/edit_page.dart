@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:task_manager/db/list/list_data.dart';
 import 'package:task_manager/main.dart';
 
 import '../../db/task/task_data.dart';
 
 class EditPage extends StatefulWidget {
   final Task _task;
-  final int _index;
 
-  const EditPage(this._task, this._index, {super.key});
+  const EditPage(this._task, {super.key});
 
   @override
   State<EditPage> createState() => _EditPageState();
@@ -15,20 +16,22 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   Task _task = Task();
-  int? _index;
 
   late final TextEditingController _taskNameController =
       TextEditingController();
   late final TextEditingController _taskDetailsController =
       TextEditingController();
+  final TextEditingController _listNameController = TextEditingController();
 
-  Task _helperTask = Task();
+  final Task _helperTask = Task();
+
+  final Box<ListData> listBox = Hive.box<ListData>("ListBox");
+  final List<String> listNameList = [];
 
   @override
   void initState() {
     super.initState();
     _task = widget._task;
-    _index = widget._index;
     _helperTask
       ..title = _task.title
       ..isDone = _task.isDone
@@ -36,18 +39,27 @@ class _EditPageState extends State<EditPage> {
       ..details = _task.details
       ..listName = _task.listName;
     _taskDetailsController.text = _helperTask.details;
+    listBox.values.toList().forEach((element) {
+      listNameList.add(element.listName);
+      print(element.listName);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     _taskNameController.text = _helperTask.title;
 
+    // listBox.values.toList().forEach((element) {
+    //   listNameList.add(element.listName);
+    //   print(element.listName);
+    // });
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-              builder: (context) => MainPage(
+              builder: (context) => const MainPage(
                     title: 'Task Manager',
                   )),
         );
@@ -78,7 +90,7 @@ class _EditPageState extends State<EditPage> {
                     child: Row(
                       children: [
                         Text(
-                          "${_helperTask.title}",
+                          _helperTask.title,
                           style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w500),
                           overflow: TextOverflow.ellipsis,
@@ -130,7 +142,7 @@ class _EditPageState extends State<EditPage> {
                                             ));
                                       }));
                             },
-                            icon: Icon(Icons.edit)),
+                            icon: const Icon(Icons.edit)),
                       ],
                     ),
                   ),
@@ -209,12 +221,13 @@ class _EditPageState extends State<EditPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   DropdownButton<String>(
-                    value: "Option 1",
-                    items: <String>['Option 1', 'Option 2', 'Option 3']
+                    value: _helperTask.listName,
+                    items: listNameList
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -223,10 +236,56 @@ class _EditPageState extends State<EditPage> {
                     }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        // _selectedValue = newValue;
+                        _helperTask.listName = newValue!;
                       });
                     },
                   ),
+                  ElevatedButton(onPressed: (){
+                    showDialog(
+                        context: context,
+                        builder: (context) => StatefulBuilder(
+                            builder: (context, statSetter) {
+                              return AlertDialog(
+                                  actionsAlignment:
+                                  MainAxisAlignment.spaceEvenly,
+                                  actions: [
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          if (_listNameController
+                                              .text.isNotEmpty) {
+                                            setState(() {
+                                              insertNewList(_listNameController.text);
+                                              listNameList.add(_listNameController.text);
+                                              _listNameController.text = "";
+                                              Navigator.of(context)
+                                                  .pop();
+                                            });
+                                          }
+                                        },
+                                        child: const Text("Add")),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Cancel")),
+                                  ],
+                                  title: const Text(
+                                      'Add New List'),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextField(
+                                        controller: _listNameController,
+                                        decoration:
+                                        const InputDecoration(
+                                          labelText: "List Name",
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      ),
+                                    ],
+                                  ));
+                            }));
+                  }, child: Text("New List"))
                 ],
               ),
             ),
@@ -258,7 +317,7 @@ class _EditPageState extends State<EditPage> {
                       ..listName = _helperTask.listName;
                     _task.save();
                   },
-                  child: Text("Save Changes"),
+                  child: const Text("Save Changes"),
                 ),
               ),
             ),
@@ -267,4 +326,16 @@ class _EditPageState extends State<EditPage> {
       ),
     );
   }
+}
+
+void insertNewList(String name) {
+  final ListData listData = ListData()
+    ..listName = name;
+  if (!listData.isInBox) {
+    final Box<ListData> box = Hive.box<ListData>("ListBox");
+    box.add(listData); // insert
+  }
+  // print("log: ${list[0]}");
+  // final Box<Task> box = Hive.box<Task>("TaskBox");
+  // print(box.values.toList()[12].title);
 }

@@ -22,6 +22,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final ListData listData = ListData()..listName = "Default";
+    if(!listData.isInBox) {
+      final Box<ListData> listBox = Hive.box<ListData>("ListBox");
+      listBox.add(listData);
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Task Manager',
