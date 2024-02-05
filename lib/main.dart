@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/screens/done_page.dart';
 import 'package:task_manager/screens/home/home_page.dart';
-import 'package:task_manager/screens/lists_page.dart';
+import 'package:task_manager/screens/lists/lists_page.dart';
 
 import 'db/list/list_data.dart';
 import 'db/task/task_data.dart';

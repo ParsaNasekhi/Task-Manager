@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/db/list/list_data.dart';
 import 'package:task_manager/main.dart';
+import 'package:task_manager/screens/lists/a_list_page.dart';
+import 'package:task_manager/screens/lists/lists_page.dart';
 
 import '../../db/task/task_data.dart';
 
 class EditPage extends StatefulWidget {
   final Task _task;
+  final String _sourcePage;
 
-  const EditPage(this._task, {super.key});
+  const EditPage(this._task, this._sourcePage, {super.key});
 
   @override
   State<EditPage> createState() => _EditPageState();
@@ -51,12 +54,21 @@ class _EditPageState extends State<EditPage> {
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context);
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-              builder: (context) => const MainPage(
-                    title: 'Task Manager',
-                  )),
-        );
+        if(widget._sourcePage == "HomePage") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) =>
+                const MainPage(
+                  title: 'Task Manager',
+                )),
+          );
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) =>
+                AListPage(widget._task.listName)),
+          );
+        }
         return true;
       },
       child: Scaffold(

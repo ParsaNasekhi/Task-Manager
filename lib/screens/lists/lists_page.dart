@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:task_manager/screens/lists/a_list_page.dart';
 
-import '../db/list/list_data.dart';
+import '../../db/list/list_data.dart';
 
 class ListsPage extends StatefulWidget {
   const ListsPage({super.key});
@@ -68,22 +69,34 @@ class _ListsPageState extends State<ListsPage> {
         padding: const EdgeInsets.all(32),
         child: Wrap(
           children: List.generate(listBox.length, (index) {
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width / 2 - 64,
-                  height: MediaQuery.of(context).size.width / 2 - 64,
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width / 2 - 64,
+                height: MediaQuery.of(context).size.width / 2 - 64,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => AListPage(listBox.values.toList()[index].listName)),);
+                  },
                   child: Card(
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(20),
-                        child: Text(listBox.values.toList()[index].listName, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 20), maxLines: 3, overflow: TextOverflow.ellipsis,),
+                        child: Text(
+                          listBox.values.toList()[index].listName,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 20),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              );
-            }),
+              ),
+            );
+          }),
         ),
       ),
     );
@@ -91,8 +104,7 @@ class _ListsPageState extends State<ListsPage> {
 }
 
 void insertNewList(String name) {
-  final ListData listData = ListData()
-    ..listName = name;
+  final ListData listData = ListData()..listName = name;
   if (!listData.isInBox) {
     final Box<ListData> box = Hive.box<ListData>("ListBox");
     box.add(listData); // insert

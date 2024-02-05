@@ -4,25 +4,38 @@ import 'package:task_manager/screens/home/edit_page.dart';
 
 import '../../db/task/task_data.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class AListPage extends StatefulWidget {
+
+  final String listName;
+
+  const AListPage(this.listName, {super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<AListPage> createState() => _AListPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _AListPageState extends State<AListPage> {
   TextEditingController controller = TextEditingController();
+
+  final Box<Task> _taskBox = Hive.box<Task>("TaskBox");
+  List<Task> _tasksList = [];
 
   @override
   Widget build(BuildContext context) {
+
+    _tasksList = [];
+    _taskBox.values.toList().forEach((element) {
+      if(element.listName == widget.listName) {
+        _tasksList.add(element);
+      }
+    });
+
     ImportanceLevel importanceLevel = ImportanceLevel.normalImportance;
-    final Box<Task> box = Hive.box<Task>("TaskBox");
-    final List<Task> list = box.values.toList();
+    // final List<Task> list = _taskBox.values.toList();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Home"),
+        title: Text(widget.listName),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -39,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                                 if (controller.text.isNotEmpty) {
                                   setState(() {
                                     insertNewTask(
-                                        controller.text, importanceLevel);
+                                        controller.text, importanceLevel, widget.listName,);
                                     Navigator.of(context).pop();
                                   });
                                 }
@@ -128,7 +141,7 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
-          children: List.generate(list.length, (index) {
+          children: List.generate(_tasksList.length, (index) {
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
               child: InkWell(
@@ -148,7 +161,8 @@ class _HomePageState extends State<HomePage> {
                             ElevatedButton(
                                 onPressed: () {
                                   setState(() {
-                                    box.deleteAt(index);
+                                    Task task = _tasksList[index];
+                                    task.delete();
                                     Navigator.pop(context);
                                   });
                                 },
@@ -160,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 onTap: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => EditPage(list[index], "HomePage")),);
+                    MaterialPageRoute(builder: (context) => EditPage(_tasksList[index], "AListPage")),);
                 },
                 child: Card(
                   shape: const RoundedRectangleBorder(
@@ -181,15 +195,12 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Checkbox(
-                              value: list[index].isDone,
+                              value: _tasksList[index].isDone,
                               onChanged: (value) {
                                 setState(() {
-                                  final Box<Task> box =
-                                      Hive.box<Task>("TaskBox");
-                                  final Task task = box.values.toList()[index];
-                                  task.isDone = value as bool;
-                                  task.save();
-                                  box.values.toList()[index].isDone = value;
+                                  _tasksList[index].isDone = value as bool;
+                                  _tasksList[index].save();
+                                  _taskBox.values.toList()[index].isDone = value;
                                 });
                               }),
                           Flexible(
@@ -198,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Flexible(
                                   child: Text(
-                                    list[index].title,
+                                    _tasksList[index].title,
                                     style: const TextStyle(fontSize: 16),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -210,13 +221,13 @@ class _HomePageState extends State<HomePage> {
                           Container(
                             width: 10,
                             decoration: BoxDecoration(
-                              color: list[index].importanceLevel ==
-                                      ImportanceLevel.highImportance
+                              color: _tasksList[index].importanceLevel ==
+                                  ImportanceLevel.highImportance
                                   ? Colors.red
-                                  : list[index].importanceLevel ==
-                                          ImportanceLevel.normalImportance
-                                      ? Colors.orange
-                                      : Colors.green,
+                                  : _tasksList[index].importanceLevel ==
+                                  ImportanceLevel.normalImportance
+                                  ? Colors.orange
+                                  : Colors.green,
                               borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(0),
                                 topRight: Radius.circular(12),
@@ -239,10 +250,11 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-void insertNewTask(String text, ImportanceLevel importanceLevel) {
+void insertNewTask(String text, ImportanceLevel importanceLevel, String listName) {
   final Task task = Task()
     ..title = text
-    ..importanceLevel = importanceLevel;
+    ..importanceLevel = importanceLevel
+  ..listName = listName;
   if (task.isInBox) {
     task.save(); // update
   } else {
