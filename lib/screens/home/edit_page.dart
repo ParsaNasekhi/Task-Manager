@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/main.dart';
-import 'package:task_manager/screens/home/home_page.dart';
 
 import '../../db/task/task_data.dart';
 
@@ -17,27 +14,43 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-
   Task _task = Task();
   int? _index;
 
-  late TextEditingController controller = TextEditingController();
+  late final TextEditingController _taskNameController =
+      TextEditingController();
+  late final TextEditingController _taskDetailsController =
+      TextEditingController();
+
+  Task _helperTask = Task();
 
   @override
   void initState() {
     super.initState();
     _task = widget._task;
     _index = widget._index;
-    controller.text = _task.title;
+    _helperTask
+      ..title = _task.title
+      ..isDone = _task.isDone
+      ..importanceLevel = _task.importanceLevel
+      ..details = _task.details
+      ..listName = _task.listName;
+    _taskDetailsController.text = _helperTask.details;
   }
 
   @override
   Widget build(BuildContext context) {
+    _taskNameController.text = _helperTask.title;
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context);
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => MainPage(title: 'Task Manager',)),);
+          MaterialPageRoute(
+              builder: (context) => MainPage(
+                    title: 'Task Manager',
+                  )),
+        );
         return true;
       },
       child: Scaffold(
@@ -47,92 +60,98 @@ class _EditPageState extends State<EditPage> {
         ),
         body: Column(
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Checkbox(
-                    value: _task.isDone,
-                    onChanged: (value) {
-                      setState(() {
-                        final Box<Task> box = Hive.box<Task>("TaskBox");
-                        _task.isDone = value as bool;
-                        _task.save();
-                        box.values.toList()[_index!].isDone = value;
-                      });
-                    }),
-                Flexible(
-                  flex: 20,
-                  child: Row(
-                    children: [
-                      Text(
-                          "${_task.title}",
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Checkbox(
+                      value: _helperTask.isDone,
+                      onChanged: (value) {
+                        setState(() {
+                          _helperTask.isDone = value as bool;
+                        });
+                      }),
+                  Flexible(
+                    flex: 20,
+                    child: Row(
+                      children: [
+                        Text(
+                          "${_helperTask.title}",
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w500),
                           overflow: TextOverflow.ellipsis,
                         ),
-                      IconButton(onPressed: (){
-
-                        showDialog(
-                            context: context,
-                            builder: (context) =>
-                                StatefulBuilder(builder: (context, statSetter) {
-                                  return AlertDialog(
-                                      actionsAlignment: MainAxisAlignment.spaceEvenly,
-                                      actions: [
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              if (controller.text.isNotEmpty) {
-                                                setState(() {
-                                                  _task.title = controller.text;
-                                                  _task.save();
-                                                  Navigator.of(context).pop();
-                                                });
-                                              }
-                                            },
-                                            child: const Text("Save")),
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text("Cancel")),
-                                      ],
-                                      title: const Text('Edit your task title'),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          TextField(
-                                            controller: controller,
-                                            decoration: const InputDecoration(
-                                              labelText: "Task Title",
-                                              border: OutlineInputBorder(),
-                                            ),
-                                          ),
-                                        ],
-                                      ));
-                                }));
-
-                      }, icon: Icon(Icons.edit)),
-                    ],
+                        IconButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => StatefulBuilder(
+                                          builder: (context, statSetter) {
+                                        return AlertDialog(
+                                            actionsAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            actions: [
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    if (_taskNameController
+                                                        .text.isNotEmpty) {
+                                                      setState(() {
+                                                        _helperTask.title =
+                                                            _taskNameController
+                                                                .text;
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      });
+                                                    }
+                                                  },
+                                                  child: const Text("Apply")),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text("Cancel")),
+                                            ],
+                                            title: const Text(
+                                                'Edit your task title'),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                TextField(
+                                                  controller: _taskNameController,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    labelText: "Task Title",
+                                                    border: OutlineInputBorder(),
+                                                  ),
+                                                ),
+                                              ],
+                                            ));
+                                      }));
+                            },
+                            icon: Icon(Icons.edit)),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+              padding: const EdgeInsets.fromLTRB(14, 0, 14, 16),
               child: Container(
                 height: 0.5,
                 color: Colors.grey.shade500,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 14, right: 14),
+              padding: const EdgeInsets.only(left: 24, right: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
                     "Importance Level:",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                   ListTile(
                     title: const Text(
@@ -141,11 +160,10 @@ class _EditPageState extends State<EditPage> {
                     ),
                     leading: Radio(
                       value: ImportanceLevel.highImportance,
-                      groupValue: _task.importanceLevel,
+                      groupValue: _helperTask.importanceLevel,
                       onChanged: (newValue) {
                         setState(() {
-                          _task.importanceLevel = newValue!;
-                          _task.save();
+                          _helperTask.importanceLevel = newValue!;
                         });
                       },
                     ),
@@ -157,10 +175,10 @@ class _EditPageState extends State<EditPage> {
                     ),
                     leading: Radio(
                       value: ImportanceLevel.normalImportance,
-                      groupValue: _task.importanceLevel,
+                      groupValue: _helperTask.importanceLevel,
                       onChanged: (newValue) {
                         setState(() {
-                          _task.importanceLevel = newValue!;
+                          _helperTask.importanceLevel = newValue!;
                         });
                       },
                     ),
@@ -172,10 +190,10 @@ class _EditPageState extends State<EditPage> {
                     ),
                     leading: Radio(
                       value: ImportanceLevel.lowImportance,
-                      groupValue: _task.importanceLevel,
+                      groupValue: _helperTask.importanceLevel,
                       onChanged: (newValue) {
                         setState(() {
-                          _task.importanceLevel = newValue!;
+                          _helperTask.importanceLevel = newValue!;
                         });
                       },
                     ),
@@ -184,14 +202,14 @@ class _EditPageState extends State<EditPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 0, 14, 0),
+              padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
               child: Container(
                 height: 0.5,
                 color: Colors.grey.shade500,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
               child: Row(
                 children: [
                   DropdownButton<String>(
@@ -213,8 +231,9 @@ class _EditPageState extends State<EditPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 0, 14, 0),
+              padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
               child: TextField(
+                controller: _taskDetailsController,
                 maxLines: 8,
                 // controller: controller,
                 decoration: const InputDecoration(
@@ -222,6 +241,24 @@ class _EditPageState extends State<EditPage> {
                   labelText: "Details",
                   labelStyle: TextStyle(),
                   border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(14),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _task
+                      ..title = _helperTask.title
+                      ..isDone = _helperTask.isDone
+                      ..importanceLevel = _helperTask.importanceLevel
+                      ..details = _taskDetailsController.text
+                      ..listName = _helperTask.listName;
+                    _task.save();
+                  },
+                  child: Text("Save Changes"),
                 ),
               ),
             ),
