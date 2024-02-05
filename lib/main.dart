@@ -23,9 +23,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final ListData listData = ListData()..listName = "Default";
-    if(!listData.isInBox) {
-      final Box<ListData> listBox = Hive.box<ListData>("ListBox");
+    final Box<ListData> listBox = Hive.box<ListData>("ListBox");
+    if(listBox.values.toList().isEmpty) {
+      final ListData listData = ListData()..listName = "Default";
       listBox.add(listData);
     }
 
