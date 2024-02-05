@@ -41,18 +41,12 @@ class _EditPageState extends State<EditPage> {
     _taskDetailsController.text = _helperTask.details;
     listBox.values.toList().forEach((element) {
       listNameList.add(element.listName);
-      print(element.listName);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     _taskNameController.text = _helperTask.title;
-
-    // listBox.values.toList().forEach((element) {
-    //   listNameList.add(element.listName);
-    //   print(element.listName);
-    // });
 
     return WillPopScope(
       onWillPop: () async {
