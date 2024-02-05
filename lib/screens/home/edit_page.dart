@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:task_manager/main.dart';
 import 'package:task_manager/screens/home/home_page.dart';
 
 import '../../db/task/task_data.dart';
@@ -20,19 +21,23 @@ class _EditPageState extends State<EditPage> {
   Task _task = Task();
   int? _index;
 
+  late TextEditingController controller = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     _task = widget._task;
     _index = widget._index;
+    controller.text = _task.title;
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        Navigator.pop(context);
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => HomePage()),);
+          MaterialPageRoute(builder: (context) => MainPage(title: 'Task Manager',)),);
         return true;
       },
       child: Scaffold(
@@ -65,7 +70,48 @@ class _EditPageState extends State<EditPage> {
                           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                           overflow: TextOverflow.ellipsis,
                         ),
-                      IconButton(onPressed: (){}, icon: Icon(Icons.edit)),
+                      IconButton(onPressed: (){
+
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                StatefulBuilder(builder: (context, statSetter) {
+                                  return AlertDialog(
+                                      actionsAlignment: MainAxisAlignment.spaceEvenly,
+                                      actions: [
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              if (controller.text.isNotEmpty) {
+                                                setState(() {
+                                                  _task.title = controller.text;
+                                                  _task.save();
+                                                  Navigator.of(context).pop();
+                                                });
+                                              }
+                                            },
+                                            child: const Text("Save")),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text("Cancel")),
+                                      ],
+                                      title: const Text('Edit your task title'),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextField(
+                                            controller: controller,
+                                            decoration: const InputDecoration(
+                                              labelText: "Task Title",
+                                              border: OutlineInputBorder(),
+                                            ),
+                                          ),
+                                        ],
+                                      ));
+                                }));
+
+                      }, icon: Icon(Icons.edit)),
                     ],
                   ),
                 ),
@@ -99,6 +145,7 @@ class _EditPageState extends State<EditPage> {
                       onChanged: (newValue) {
                         setState(() {
                           _task.importanceLevel = newValue!;
+                          _task.save();
                         });
                       },
                     ),
