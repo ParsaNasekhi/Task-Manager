@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
         });
       });
     });
-
+    final int length = _tasksList.length;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -190,7 +190,7 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
-          children: List.generate(_tasksList.length, (index) {
+          children: List.generate(length, (index) {
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
               child: InkWell(
@@ -210,7 +210,7 @@ class _HomePageState extends State<HomePage> {
                             ElevatedButton(
                                 onPressed: () {
                                   setState(() {
-                                    _taskBox.deleteAt(index);
+                                    _taskBox.deleteAt(length - index - 1);
                                     Navigator.pop(context);
                                   });
                                 },
@@ -222,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 onTap: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => EditPage(_tasksList[index], "HomePage")),);
+                      MaterialPageRoute(builder: (context) => EditPage(_tasksList[length - index -1], "HomePage")),);
                 },
                 child: Card(
                   shape: const RoundedRectangleBorder(
@@ -243,11 +243,11 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Checkbox(
-                              value: _tasksList[index].isDone,
+                              value: _tasksList[length - index - 1].isDone,
                               onChanged: (value) {
                                 setState(() {
-                                    _tasksList[index].isDone = value as bool;
-                                    _tasksList[index].save();
+                                    _tasksList[length - index - 1].isDone = value as bool;
+                                    _tasksList[length - index - 1].save();
                                 });
                               }),
                           Flexible(
@@ -256,7 +256,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Flexible(
                                   child: Text(
-                                    _tasksList[index].title,
+                                    _tasksList[length - index -1].title,
                                     style: const TextStyle(fontSize: 16),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -268,10 +268,10 @@ class _HomePageState extends State<HomePage> {
                           Container(
                             width: 10,
                             decoration: BoxDecoration(
-                              color: _tasksList[index].importanceLevel ==
+                              color: _tasksList[length - index - 1].importanceLevel ==
                                       ImportanceLevel.highImportance
                                   ? Colors.red
-                                  : _tasksList[index].importanceLevel ==
+                                  : _tasksList[length - index - 1].importanceLevel ==
                                           ImportanceLevel.normalImportance
                                       ? Colors.orange
                                       : Colors.green,
@@ -307,7 +307,4 @@ void insertNewTask(String text, ImportanceLevel importanceLevel) {
     final Box<Task> box = Hive.box<Task>("TaskBox");
     box.add(task); // insert
   }
-  // print("log: ${list[0]}");
-  // final Box<Task> box = Hive.box<Task>("TaskBox");
-  // print(box.values.toList()[12].title);
 }

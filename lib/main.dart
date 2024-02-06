@@ -20,15 +20,12 @@ Future<void> main() async {
 /*
 
 1- search
-2- filter
-3- empty page
-4- shimmer effect
-5- exit
-6- delete all
-7- uneditable tasks in DonePage
-8- time and date
-9- edit UI
-10- ordering
+2- empty page
+3- shimmer effect
+4- uneditable tasks in DonePage
+5- time and date
+6- edit UI
+7- ordering
 
 */
 

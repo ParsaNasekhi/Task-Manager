@@ -29,6 +29,8 @@ class _DonePageState extends State<DonePage> {
       });
     });
 
+    final int length = _tasksList.length;
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -104,7 +106,7 @@ class _DonePageState extends State<DonePage> {
                             ElevatedButton(
                                 onPressed: () {
                                   setState(() {
-                                    _tasksList[index].delete();
+                                    _tasksList[length - index - 1].delete();
                                     Navigator.pop(context);
                                   });
                                 },
@@ -116,7 +118,7 @@ class _DonePageState extends State<DonePage> {
                 },
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => EditPage(_tasksList[index], "DonePage")),);
+                    MaterialPageRoute(builder: (context) => EditPage(_tasksList[length - index - 1], "DonePage")),);
                 },
                 child: Card(
                   shape: const RoundedRectangleBorder(
@@ -137,11 +139,11 @@ class _DonePageState extends State<DonePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Checkbox(
-                              value: _tasksList[index].isDone,
+                              value: _tasksList[length - index - 1].isDone,
                               onChanged: (value) {
                                 setState(() {
-                                  _tasksList[index].isDone = value as bool;
-                                  _tasksList[index].save();
+                                  _tasksList[length - index - 1].isDone = value as bool;
+                                  _tasksList[length - index - 1].save();
                                 });
                               }),
                           Flexible(
@@ -150,7 +152,7 @@ class _DonePageState extends State<DonePage> {
                               children: [
                                 Flexible(
                                   child: Text(
-                                    _tasksList[index].title,
+                                    _tasksList[length - index - 1].title,
                                     style: const TextStyle(fontSize: 16),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -162,10 +164,10 @@ class _DonePageState extends State<DonePage> {
                           Container(
                             width: 10,
                             decoration: BoxDecoration(
-                              color: _tasksList[index].importanceLevel ==
+                              color: _tasksList[length - index - 1].importanceLevel ==
                                   ImportanceLevel.highImportance
                                   ? Colors.red
-                                  : _tasksList[index].importanceLevel ==
+                                  : _tasksList[length - index - 1].importanceLevel ==
                                   ImportanceLevel.normalImportance
                                   ? Colors.orange
                                   : Colors.green,
