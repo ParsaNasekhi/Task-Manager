@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: const Text("Do you want to remove this task?"),
+                          title: const Text("Do you want to remove this task?", style: TextStyle(fontSize: 20),),
                           actions: [
                             ElevatedButton(
                                 onPressed: () {

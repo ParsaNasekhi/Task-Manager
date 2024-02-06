@@ -261,7 +261,4 @@ void insertNewTask(String text, ImportanceLevel importanceLevel, String listName
     final Box<Task> box = Hive.box<Task>("TaskBox");
     box.add(task); // insert
   }
-  // print("log: ${list[0]}");
-  // final Box<Task> box = Hive.box<Task>("TaskBox");
-  // print(box.values.toList()[12].title);
 }

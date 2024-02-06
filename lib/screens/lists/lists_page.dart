@@ -3,6 +3,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/screens/lists/a_list_page.dart';
 
 import '../../db/list/list_data.dart';
+import '../../db/task/task_data.dart';
 
 class ListsPage extends StatefulWidget {
   const ListsPage({super.key});
@@ -65,38 +66,135 @@ class _ListsPageState extends State<ListsPage> {
         },
         child: const Icon(Icons.add),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Wrap(
-          children: List.generate(listBox.length, (index) {
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width / 2 - 64,
-                height: MediaQuery.of(context).size.width / 2 - 64,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => AListPage(listBox.values.toList()[index].listName)),);
-                  },
-                  child: Card(
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text(
-                          listBox.values.toList()[index].listName,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 20),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Wrap(
+            children: List.generate(listBox.length, (index) {
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width / 2 - 64,
+                  height: MediaQuery.of(context).size.width / 2 - 64,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => AListPage(
+                                listBox.values.toList()[index].listName)),
+                      );
+                    },
+                    onLongPress: () {
+                      if (index != 0) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Icon(Icons.delete_sweep_outlined),
+                                actions: [
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            deleteList(
+                                                listBox.values.toList()[index],
+                                                false);
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        child: const Text(
+                                            "Delete the list without its content")),
+                                  ),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            deleteList(
+                                                listBox.values.toList()[index],
+                                                true);
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        child: const Text(
+                                            "Delete the list along with its content")),
+                                  ),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          "Cancel the operation",
+                                          style: TextStyle(color: Colors.red),
+                                        )),
+                                  ),
+                                ],
+                                actionsAlignment: MainAxisAlignment.spaceEvenly,
+                              );
+                            });
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Icon(Icons.delete_sweep_outlined),
+                                actions: [
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            deleteList(
+                                                listBox.values.toList()[index],
+                                                null);
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        child: const Text(
+                                            "Delete the list content")),
+                                  ),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          "Cancel the operation",
+                                          style: TextStyle(color: Colors.red),
+                                        )),
+                                  ),
+                                ],
+                                actionsAlignment: MainAxisAlignment.spaceEvenly,
+                              );
+                            });
+                      }
+                    },
+                    child: Card(
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Text(
+                            listBox.values.toList()[index].listName,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 20,
+                                color: index == 0 ? Colors.blue : null),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
+          ),
         ),
       ),
     );
@@ -109,4 +207,23 @@ void insertNewList(String name) {
     final Box<ListData> box = Hive.box<ListData>("ListBox");
     box.add(listData); // insert
   }
+}
+
+void deleteList(ListData listItem, bool? deleteWithContent) {
+  final Box<Task> taskBox = Hive.box<Task>("TaskBox");
+  if (deleteWithContent == null || deleteWithContent) {
+    taskBox.values.toList().forEach((element) {
+      if (element.listName == listItem.listName) {
+        element.delete();
+      }
+    });
+  } else {
+    taskBox.values.toList().forEach((element) {
+      if (element.listName == listItem.listName) {
+        element.listName = "Default";
+        element.save();
+      }
+    });
+  }
+  if (deleteWithContent != null) listItem.delete();
 }
