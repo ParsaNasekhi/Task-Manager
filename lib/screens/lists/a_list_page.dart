@@ -22,7 +22,6 @@ class _AListPageState extends State<AListPage> {
 
   @override
   Widget build(BuildContext context) {
-
     _tasksList = [];
     _taskBox.values.toList().forEach((element) {
       if(element.listName == widget.listName) {

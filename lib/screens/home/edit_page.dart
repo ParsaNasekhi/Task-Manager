@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/db/list/list_data.dart';
 import 'package:task_manager/main.dart';
+import 'package:task_manager/screens/done_page.dart';
 import 'package:task_manager/screens/lists/a_list_page.dart';
 import 'package:task_manager/screens/lists/lists_page.dart';
 
@@ -58,15 +59,19 @@ class _EditPageState extends State<EditPage> {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) =>
-                const MainPage(
-                  title: 'Task Manager',
-                )),
+                const MainPage(DisplayingPage.homePage)),
+          );
+        } else if (widget._sourcePage == "AListPage") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) =>
+                AListPage(widget._task.listName)),
           );
         } else {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) =>
-                AListPage(widget._task.listName)),
+                const MainPage(DisplayingPage.donePage)),
           );
         }
         return true;

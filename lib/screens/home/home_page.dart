@@ -12,13 +12,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController controller = TextEditingController();
+  TextEditingController _controller = TextEditingController();
+  final Box<Task> _taskBox = Hive.box<Task>("TaskBox");
 
   @override
   Widget build(BuildContext context) {
     ImportanceLevel importanceLevel = ImportanceLevel.normalImportance;
-    final Box<Task> box = Hive.box<Task>("TaskBox");
-    final List<Task> list = box.values.toList();
+    final List<Task> tasksList = _taskBox.values.toList();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          controller = TextEditingController();
+          _controller = TextEditingController();
           showDialog(
               context: context,
               builder: (context) =>
@@ -36,10 +36,10 @@ class _HomePageState extends State<HomePage> {
                         actions: [
                           ElevatedButton(
                               onPressed: () {
-                                if (controller.text.isNotEmpty) {
+                                if (_controller.text.isNotEmpty) {
                                   setState(() {
                                     insertNewTask(
-                                        controller.text, importanceLevel);
+                                        _controller.text, importanceLevel);
                                     Navigator.of(context).pop();
                                   });
                                 }
@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextField(
-                              controller: controller,
+                              controller: _controller,
                               decoration: const InputDecoration(
                                 labelText: "Task Title",
                                 border: OutlineInputBorder(),
@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
-          children: List.generate(list.length, (index) {
+          children: List.generate(tasksList.length, (index) {
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
               child: InkWell(
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                             ElevatedButton(
                                 onPressed: () {
                                   setState(() {
-                                    box.deleteAt(index);
+                                    _taskBox.deleteAt(index);
                                     Navigator.pop(context);
                                   });
                                 },
@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 onTap: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => EditPage(list[index], "HomePage")),);
+                      MaterialPageRoute(builder: (context) => EditPage(tasksList[index], "HomePage")),);
                 },
                 child: Card(
                   shape: const RoundedRectangleBorder(
@@ -181,15 +181,11 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Checkbox(
-                              value: list[index].isDone,
+                              value: tasksList[index].isDone,
                               onChanged: (value) {
                                 setState(() {
-                                  final Box<Task> box =
-                                      Hive.box<Task>("TaskBox");
-                                  final Task task = box.values.toList()[index];
-                                  task.isDone = value as bool;
-                                  task.save();
-                                  box.values.toList()[index].isDone = value;
+                                  tasksList[index].isDone = value as bool;
+                                  tasksList[index].save();
                                 });
                               }),
                           Flexible(
@@ -198,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Flexible(
                                   child: Text(
-                                    list[index].title,
+                                    tasksList[index].title,
                                     style: const TextStyle(fontSize: 16),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -210,10 +206,10 @@ class _HomePageState extends State<HomePage> {
                           Container(
                             width: 10,
                             decoration: BoxDecoration(
-                              color: list[index].importanceLevel ==
+                              color: tasksList[index].importanceLevel ==
                                       ImportanceLevel.highImportance
                                   ? Colors.red
-                                  : list[index].importanceLevel ==
+                                  : tasksList[index].importanceLevel ==
                                           ImportanceLevel.normalImportance
                                       ? Colors.orange
                                       : Colors.green,

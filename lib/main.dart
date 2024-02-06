@@ -36,22 +36,29 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MainPage(title: 'Task Manager'),
+      home: const MainPage(DisplayingPage.homePage),
     );
   }
 }
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key, required this.title});
 
-  final String title;
+  final DisplayingPage _displayingPage;
+
+  const MainPage(this._displayingPage, {super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  DisplayingPage displayingPage = DisplayingPage.homePage;
+  late DisplayingPage displayingPage;
+
+  @override
+  void initState() {
+    super.initState();
+    displayingPage = widget._displayingPage;
+  }
 
   @override
   Widget build(BuildContext context) {
