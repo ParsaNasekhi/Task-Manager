@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/db/list/list_data.dart';
 import 'package:task_manager/main.dart';
-import 'package:task_manager/screens/done_page.dart';
 import 'package:task_manager/screens/lists/a_list_page.dart';
-import 'package:task_manager/screens/lists/lists_page.dart';
 
 import '../../db/task/task_data.dart';
 
@@ -298,7 +296,7 @@ class _EditPageState extends State<EditPage> {
                                       ],
                                     ));
                               }));
-                    }, child: Text("New List"))
+                    }, child: const Text("New List"))
                   ],
                 ),
               ),
@@ -349,7 +347,4 @@ void insertNewList(String name) {
     final Box<ListData> box = Hive.box<ListData>("ListBox");
     box.add(listData); // insert
   }
-  // print("log: ${list[0]}");
-  // final Box<Task> box = Hive.box<Task>("TaskBox");
-  // print(box.values.toList()[12].title);
 }

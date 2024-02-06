@@ -17,12 +17,17 @@ class _DonePageState extends State<DonePage> {
 
   @override
   Widget build(BuildContext context) {
-    _tasksList = [];
-    _taskBox.values.toList().forEach((element) {
-      if (element.isDone) {
-        _tasksList.add(element);
-      }
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        _tasksList = [];
+        _taskBox.values.toList().forEach((element) {
+          if (element.isDone) {
+            _tasksList.add(element);
+          }
+        });
+      });
     });
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,

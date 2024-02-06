@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/screens/home/edit_page.dart';
@@ -14,11 +16,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController _controller = TextEditingController();
   final Box<Task> _taskBox = Hive.box<Task>("TaskBox");
+  List<Task> _tasksList = [];
 
   @override
   Widget build(BuildContext context) {
     ImportanceLevel importanceLevel = ImportanceLevel.normalImportance;
-    final List<Task> tasksList = _taskBox.values.toList();
+
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        _tasksList = [];
+        _taskBox.values.toList().forEach((element) {
+          if (!element.isDone) {
+            _tasksList.add(element);
+          }
+        });
+      });
+    });
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -128,7 +142,7 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
-          children: List.generate(tasksList.length, (index) {
+          children: List.generate(_tasksList.length, (index) {
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
               child: InkWell(
@@ -160,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 onTap: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => EditPage(tasksList[index], "HomePage")),);
+                      MaterialPageRoute(builder: (context) => EditPage(_tasksList[index], "HomePage")),);
                 },
                 child: Card(
                   shape: const RoundedRectangleBorder(
@@ -181,11 +195,11 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Checkbox(
-                              value: tasksList[index].isDone,
+                              value: _tasksList[index].isDone,
                               onChanged: (value) {
                                 setState(() {
-                                  tasksList[index].isDone = value as bool;
-                                  tasksList[index].save();
+                                    _tasksList[index].isDone = value as bool;
+                                    _tasksList[index].save();
                                 });
                               }),
                           Flexible(
@@ -194,7 +208,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Flexible(
                                   child: Text(
-                                    tasksList[index].title,
+                                    _tasksList[index].title,
                                     style: const TextStyle(fontSize: 16),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -206,10 +220,10 @@ class _HomePageState extends State<HomePage> {
                           Container(
                             width: 10,
                             decoration: BoxDecoration(
-                              color: tasksList[index].importanceLevel ==
+                              color: _tasksList[index].importanceLevel ==
                                       ImportanceLevel.highImportance
                                   ? Colors.red
-                                  : tasksList[index].importanceLevel ==
+                                  : _tasksList[index].importanceLevel ==
                                           ImportanceLevel.normalImportance
                                       ? Colors.orange
                                       : Colors.green,
