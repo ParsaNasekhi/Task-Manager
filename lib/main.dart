@@ -17,6 +17,21 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
+/*
+
+1- search
+2- filter
+3- empty page
+4- shimmer effect
+5- exit
+6- delete all
+7- uneditable tasks in DonePage
+8- time and date
+9- edit UI
+10- ordering
+
+*/
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -39,6 +54,7 @@ class MyApp extends StatelessWidget {
       home: const MainPage(DisplayingPage.homePage),
     );
   }
+
 }
 
 class MainPage extends StatefulWidget {

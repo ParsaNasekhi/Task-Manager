@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/screens/home/edit_page.dart';
 
@@ -37,6 +38,53 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("Home"),
+        actions: [
+          PopupMenuButton<String>(
+            itemBuilder: (BuildContext context) {
+              return [
+                const PopupMenuItem(
+                  value: "Delete all",
+                  child: Text("Delete all"),
+                ),
+                const PopupMenuItem(
+                  value: "Exit",
+                  child: Text("Exit"),
+                ),
+              ];
+            },
+            onSelected: (value) {
+              if (value == "Exit") {
+                SystemNavigator.pop();
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text("Do you want to remove all tasks?", style: TextStyle(fontSize: 20),),
+                        actions: [
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("NO")),
+                          ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  for (var element in _tasksList) {
+                                    element.delete();
+                                  }
+                                  Navigator.pop(context);
+                                });
+                              },
+                              child: const Text("YES")),
+                        ],
+                        actionsAlignment: MainAxisAlignment.spaceEvenly,
+                      );
+                    });
+              }
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

@@ -30,10 +30,13 @@ class _EditPageState extends State<EditPage> {
   final Box<ListData> listBox = Hive.box<ListData>("ListBox");
   final List<String> listNameList = [];
 
+  late final String _oldListName;
+
   @override
   void initState() {
     super.initState();
     _task = widget._task;
+    _oldListName = _task.listName;
     _helperTask
       ..title = _task.title
       ..isDone = _task.isDone
@@ -63,7 +66,7 @@ class _EditPageState extends State<EditPage> {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) =>
-                AListPage(widget._task.listName)),
+                AListPage(_oldListName)),
           );
         } else {
           Navigator.of(context).pushReplacement(

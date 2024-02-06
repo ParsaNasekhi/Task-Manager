@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/screens/lists/a_list_page.dart';
 
@@ -22,6 +23,83 @@ class _ListsPageState extends State<ListsPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("Lists"),
+        actions: [
+          PopupMenuButton<String>(
+            itemBuilder: (BuildContext context) {
+              return [
+                const PopupMenuItem(
+                  value: "Delete all",
+                  child: Text("Delete all"),
+                ),
+                const PopupMenuItem(
+                  value: "Exit",
+                  child: Text("Exit"),
+                ),
+              ];
+            },
+            onSelected: (value) {
+              if (value == "Exit") {
+                SystemNavigator.pop();
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Icon(Icons.delete_sweep_outlined),
+                        actions: [
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    listBox.values.toList().forEach((element) {
+                                      if (element != listBox.values.toList()[0]) {
+                                        deleteList(element, false);
+                                      }
+                                    });
+                                    Navigator.pop(context);
+                                  });
+                                },
+                                child: const Text(
+                                    "Delete all lists without their contents")),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    listBox.values.toList().forEach((element) {
+                                      deleteList(
+                                          element,
+                                          element == listBox.values.toList()[0]
+                                              ? null
+                                              : true);
+                                    });
+                                    Navigator.pop(context);
+                                  });
+                                },
+                                child: const Text(
+                                    "Delete all lists with their contents")),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text(
+                                  "Cancel the operation",
+                                  style: TextStyle(color: Colors.red),
+                                )),
+                          ),
+                        ],
+                        actionsAlignment: MainAxisAlignment.spaceEvenly,
+                      );
+                    });
+              }
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -119,7 +197,7 @@ class _ListsPageState extends State<ListsPage> {
                                           });
                                         },
                                         child: const Text(
-                                            "Delete the list along with its content")),
+                                            "Delete the list with its content")),
                                   ),
                                   SizedBox(
                                     width: double.infinity,
