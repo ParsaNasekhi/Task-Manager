@@ -62,17 +62,11 @@ class _EditPageState extends State<EditPage> {
                 builder: (context) =>
                 const MainPage(DisplayingPage.homePage)),
           );
-        } else if (widget._sourcePage == "AListPage") {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-                builder: (context) =>
-                AListPage(_oldListName)),
-          );
         } else {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) =>
-                const MainPage(DisplayingPage.donePage)),
+                AListPage(_oldListName)),
           );
         }
         return true;

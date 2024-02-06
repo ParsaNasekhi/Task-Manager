@@ -22,9 +22,8 @@ Future<void> main() async {
 1- search
 2- empty page
 3- shimmer effect
-4- uneditable tasks in DonePage
-5- time and date
-6- edit UI
+4- time and date
+5- edit UI
 
 */
 
