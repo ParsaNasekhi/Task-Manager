@@ -308,7 +308,6 @@ class _EditPageState extends State<EditPage> {
                 child: TextField(
                   controller: _taskDetailsController,
                   maxLines: 8,
-                  // controller: controller,
                   decoration: const InputDecoration(
                     alignLabelWithHint: true,
                     labelText: "Details",

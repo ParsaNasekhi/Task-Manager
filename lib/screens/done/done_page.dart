@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:task_manager/screens/done/done_task_info_page.dart';
 import 'package:task_manager/screens/home/edit_page.dart';
 
-import '../../db/task/task_data.dart';
+import '../../../db/task/task_data.dart';
 
 class DonePage extends StatefulWidget {
   const DonePage({super.key});
@@ -118,7 +119,7 @@ class _DonePageState extends State<DonePage> {
                 },
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => EditPage(_tasksList[length - index - 1], "DonePage")),);
+                    MaterialPageRoute(builder: (context) => DoneTaskInfoPage(_tasksList[length - index - 1])),);
                 },
                 child: Card(
                   shape: const RoundedRectangleBorder(

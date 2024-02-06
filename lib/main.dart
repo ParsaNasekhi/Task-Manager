@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:task_manager/screens/done_page.dart';
+import 'package:task_manager/screens/done/done_page.dart';
 import 'package:task_manager/screens/home/home_page.dart';
 import 'package:task_manager/screens/lists/lists_page.dart';
 
@@ -25,7 +25,6 @@ Future<void> main() async {
 4- uneditable tasks in DonePage
 5- time and date
 6- edit UI
-7- ordering
 
 */
 
