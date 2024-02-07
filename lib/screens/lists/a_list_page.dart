@@ -295,7 +295,6 @@ class _AListPageState extends State<AListPage> {
           ))
           : _isPageEmpty != null && _isPageEmpty == false
           ? SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
         child: Column(
           children: List.generate(_tasksList.length, (index) {
             return Padding(
