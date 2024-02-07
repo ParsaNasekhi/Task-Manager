@@ -20,10 +20,8 @@ Future<void> main() async {
 /*
 
 1- search
-2- empty page
-3- shimmer effect
-4- time and date
-5- edit UI
+2- time and date
+3- edit UI
 
 */
 

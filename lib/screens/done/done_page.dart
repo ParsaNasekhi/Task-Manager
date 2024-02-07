@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:task_manager/screens/done/done_task_info_page.dart';
 import 'package:task_manager/screens/home/edit_page.dart';
 
@@ -17,6 +18,8 @@ class _DonePageState extends State<DonePage> {
   final Box<Task> _taskBox = Hive.box<Task>("TaskBox");
   List<Task> _tasksList = [];
 
+  bool? _isPageEmpty;
+
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 2), () {
@@ -27,6 +30,11 @@ class _DonePageState extends State<DonePage> {
             _tasksList.add(element);
           }
         });
+        if (_tasksList.isEmpty) {
+          _isPageEmpty = true;
+        } else {
+          _isPageEmpty = false;
+        }
       });
     });
 
@@ -84,7 +92,101 @@ class _DonePageState extends State<DonePage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: _isPageEmpty == null
+          ? Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.white,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Card(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                    ),
+                  ),
+                  child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width,
+                    height: MediaQuery.sizeOf(context).height / 12,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Card(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                    ),
+                  ),
+                  child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width,
+                    height: MediaQuery.sizeOf(context).height / 12,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Card(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                    ),
+                  ),
+                  child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width,
+                    height: MediaQuery.sizeOf(context).height / 12,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Card(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                    ),
+                  ),
+                  child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width,
+                    height: MediaQuery.sizeOf(context).height / 12,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Card(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                    ),
+                  ),
+                  child: SizedBox(
+                    width: MediaQuery.sizeOf(context).width,
+                    height: MediaQuery.sizeOf(context).height / 12,
+                  ),
+                ),
+              ),
+            ],
+          ))
+          : _isPageEmpty != null && _isPageEmpty == false
+          ? SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: List.generate(_tasksList.length, (index) {
@@ -189,7 +291,12 @@ class _DonePageState extends State<DonePage> {
             );
           }),
         ),
-      ),
+      )
+          : const Center(
+          child: Icon(
+            Icons.no_backpack_outlined,
+            size: 256,
+          ))
     );
   }
 }
