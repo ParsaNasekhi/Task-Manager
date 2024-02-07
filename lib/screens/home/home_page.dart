@@ -23,24 +23,64 @@ class _HomePageState extends State<HomePage> {
   List<Task> _tasksList = [];
 
   bool? _isPageEmpty;
+  ImportanceLevel? _filteredImportanceLevel;
 
   @override
   Widget build(BuildContext context) {
+
     ImportanceLevel importanceLevel = ImportanceLevel.normalImportance;
 
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         _tasksList = [];
         _taskBox.values.toList().forEach((element) {
-          if (!element.isDone) {
-            if (_searchController.text.isEmpty) {
+
+          if (!element.isDone && _searchController.text.isEmpty) {
+
+            if (_filteredImportanceLevel == null) {
               _tasksList.add(element);
-            } else {
-              if (element.title.startsWith(_searchController.text)) {
+            } else if (_filteredImportanceLevel == ImportanceLevel.highImportance) {
+              if (element.importanceLevel == ImportanceLevel.highImportance) {
+                _tasksList.add(element);
+              }
+            } else if (_filteredImportanceLevel == ImportanceLevel.normalImportance) {
+              if (element.importanceLevel == ImportanceLevel.normalImportance) {
+                _tasksList.add(element);
+              }
+            } else if (_filteredImportanceLevel == ImportanceLevel.lowImportance) {
+              if (element.importanceLevel == ImportanceLevel.lowImportance) {
                 _tasksList.add(element);
               }
             }
+
+          } else if (!element.isDone) {
+
+            if (_filteredImportanceLevel == null) {
+              if (element.title.startsWith(_searchController.text)) {
+                _tasksList.add(element);
+              }
+            } else if (_filteredImportanceLevel == ImportanceLevel.highImportance) {
+              if (element.importanceLevel == ImportanceLevel.highImportance) {
+                if (element.title.startsWith(_searchController.text)) {
+                  _tasksList.add(element);
+                }
+              }
+            } else if (_filteredImportanceLevel == ImportanceLevel.normalImportance) {
+              if (element.importanceLevel == ImportanceLevel.normalImportance) {
+                if (element.title.startsWith(_searchController.text)) {
+                  _tasksList.add(element);
+                }
+              }
+            } else if (_filteredImportanceLevel == ImportanceLevel.lowImportance) {
+              if (element.importanceLevel == ImportanceLevel.lowImportance) {
+                if (element.title.startsWith(_searchController.text)) {
+                  _tasksList.add(element);
+                }
+              }
+            }
+
           }
+
         });
         if (_tasksList.isEmpty) {
           _isPageEmpty = true;
@@ -61,6 +101,10 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (BuildContext context) {
                 return [
                   const PopupMenuItem(
+                    value: "Filter",
+                    child: Text("Filter"),
+                  ),
+                  const PopupMenuItem(
                     value: "Delete all",
                     child: Text("Delete all"),
                   ),
@@ -73,7 +117,7 @@ class _HomePageState extends State<HomePage> {
               onSelected: (value) {
                 if (value == "Exit") {
                   SystemNavigator.pop();
-                } else {
+                } else if (value == "Delete all") {
                   showDialog(
                       context: context,
                       builder: (context) {
@@ -102,6 +146,91 @@ class _HomePageState extends State<HomePage> {
                           actionsAlignment: MainAxisAlignment.spaceEvenly,
                         );
                       });
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (context) =>
+                          StatefulBuilder(builder: (context, statSetter) {
+                            return AlertDialog(
+                              title: const Text(
+                                "Importance Level:"
+                              ),
+                                actionsAlignment: MainAxisAlignment.spaceEvenly,
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            ListTile(
+                                              title: const Text(
+                                                "High Importance",
+                                                style: TextStyle(color: Colors.red),
+                                              ),
+                                              leading: Radio(
+                                                value: ImportanceLevel.highImportance,
+                                                groupValue: _filteredImportanceLevel,
+                                                onChanged: (newValue) {
+                                                  statSetter(() {
+                                                    _filteredImportanceLevel = newValue;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            ListTile(
+                                              title: const Text(
+                                                "Normal Importance",
+                                                style:
+                                                TextStyle(color: Colors.orange),
+                                              ),
+                                              leading: Radio(
+                                                value:
+                                                ImportanceLevel.normalImportance,
+                                                groupValue: _filteredImportanceLevel,
+                                                onChanged: (newValue) {
+                                                  statSetter(() {
+                                                    _filteredImportanceLevel = newValue;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            ListTile(
+                                              title: const Text(
+                                                "Low Importance",
+                                                style: TextStyle(color: Colors.green),
+                                              ),
+                                              leading: Radio(
+                                                value: ImportanceLevel.lowImportance,
+                                                groupValue: _filteredImportanceLevel,
+                                                onChanged: (newValue) {
+                                                  statSetter(() {
+                                                    _filteredImportanceLevel = newValue;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            ListTile(
+                                              title: const Text(
+                                                "No Filter"
+                                              ),
+                                              leading: Radio(
+                                                value: null,
+                                                groupValue: _filteredImportanceLevel,
+                                                onChanged: (newValue) {
+                                                  statSetter(() {
+                                                    _filteredImportanceLevel = newValue;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                  ],
+                                ));
+                          }));
                 }
               },
             ),
