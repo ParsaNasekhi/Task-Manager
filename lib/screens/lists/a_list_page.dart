@@ -126,75 +126,84 @@ class _AListPageState extends State<AListPage> {
                               },
                               child: const Text("Cancel")),
                         ],
-                        title: const Text('Enter your task title'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextField(
-                              controller: controller,
-                              decoration: const InputDecoration(
-                                labelText: "Task Title",
-                                border: OutlineInputBorder(),
+                        title: const Text('Add your task'),
+                        content: SingleChildScrollView(
+                          child: Container(
+                            color: Colors.grey.shade100,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(height: 4),
+                                  TextField(
+                                    controller: controller,
+                                    decoration: const InputDecoration(
+                                      labelText: "Task Title",
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.only(top: 8),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            "Importance Level:",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          ListTile(
+                                            title: const Text(
+                                              "High Importance",
+                                              style: TextStyle(color: Colors.red),
+                                            ),
+                                            leading: Radio(
+                                              value: ImportanceLevel.highImportance,
+                                              groupValue: importanceLevel,
+                                              onChanged: (newValue) {
+                                                statSetter(() {
+                                                  importanceLevel = newValue!;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          ListTile(
+                                            title: const Text(
+                                              "Normal Importance",
+                                              style: TextStyle(color: Colors.orange),
+                                            ),
+                                            leading: Radio(
+                                              value: ImportanceLevel.normalImportance,
+                                              groupValue: importanceLevel,
+                                              onChanged: (newValue) {
+                                                statSetter(() {
+                                                  importanceLevel = newValue!;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          ListTile(
+                                            title: const Text(
+                                              "Low Importance",
+                                              style: TextStyle(color: Colors.green),
+                                            ),
+                                            leading: Radio(
+                                              value: ImportanceLevel.lowImportance,
+                                              groupValue: importanceLevel,
+                                              onChanged: (newValue) {
+                                                statSetter(() {
+                                                  importanceLevel = newValue!;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                                ],
                               ),
                             ),
-                            Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      "Importance Level:",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    ListTile(
-                                      title: const Text(
-                                        "High Importance",
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                      leading: Radio(
-                                        value: ImportanceLevel.highImportance,
-                                        groupValue: importanceLevel,
-                                        onChanged: (newValue) {
-                                          statSetter(() {
-                                            importanceLevel = newValue!;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    ListTile(
-                                      title: const Text(
-                                        "Normal Importance",
-                                        style: TextStyle(color: Colors.orange),
-                                      ),
-                                      leading: Radio(
-                                        value: ImportanceLevel.normalImportance,
-                                        groupValue: importanceLevel,
-                                        onChanged: (newValue) {
-                                          statSetter(() {
-                                            importanceLevel = newValue!;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    ListTile(
-                                      title: const Text(
-                                        "Low Importance",
-                                        style: TextStyle(color: Colors.green),
-                                      ),
-                                      leading: Radio(
-                                        value: ImportanceLevel.lowImportance,
-                                        groupValue: importanceLevel,
-                                        onChanged: (newValue) {
-                                          statSetter(() {
-                                            importanceLevel = newValue!;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          ],
+                          ),
                         ));
                   }));
         },

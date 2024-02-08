@@ -27,60 +27,59 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     ImportanceLevel importanceLevel = ImportanceLevel.normalImportance;
 
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         _tasksList = [];
         _taskBox.values.toList().forEach((element) {
-
           if (!element.isDone && _searchController.text.isEmpty) {
-
             if (_filteredImportanceLevel == null) {
               _tasksList.add(element);
-            } else if (_filteredImportanceLevel == ImportanceLevel.highImportance) {
+            } else if (_filteredImportanceLevel ==
+                ImportanceLevel.highImportance) {
               if (element.importanceLevel == ImportanceLevel.highImportance) {
                 _tasksList.add(element);
               }
-            } else if (_filteredImportanceLevel == ImportanceLevel.normalImportance) {
+            } else if (_filteredImportanceLevel ==
+                ImportanceLevel.normalImportance) {
               if (element.importanceLevel == ImportanceLevel.normalImportance) {
                 _tasksList.add(element);
               }
-            } else if (_filteredImportanceLevel == ImportanceLevel.lowImportance) {
+            } else if (_filteredImportanceLevel ==
+                ImportanceLevel.lowImportance) {
               if (element.importanceLevel == ImportanceLevel.lowImportance) {
                 _tasksList.add(element);
               }
             }
-
           } else if (!element.isDone) {
-
             if (_filteredImportanceLevel == null) {
               if (element.title.startsWith(_searchController.text)) {
                 _tasksList.add(element);
               }
-            } else if (_filteredImportanceLevel == ImportanceLevel.highImportance) {
+            } else if (_filteredImportanceLevel ==
+                ImportanceLevel.highImportance) {
               if (element.importanceLevel == ImportanceLevel.highImportance) {
                 if (element.title.startsWith(_searchController.text)) {
                   _tasksList.add(element);
                 }
               }
-            } else if (_filteredImportanceLevel == ImportanceLevel.normalImportance) {
+            } else if (_filteredImportanceLevel ==
+                ImportanceLevel.normalImportance) {
               if (element.importanceLevel == ImportanceLevel.normalImportance) {
                 if (element.title.startsWith(_searchController.text)) {
                   _tasksList.add(element);
                 }
               }
-            } else if (_filteredImportanceLevel == ImportanceLevel.lowImportance) {
+            } else if (_filteredImportanceLevel ==
+                ImportanceLevel.lowImportance) {
               if (element.importanceLevel == ImportanceLevel.lowImportance) {
                 if (element.title.startsWith(_searchController.text)) {
                   _tasksList.add(element);
                 }
               }
             }
-
           }
-
         });
         if (_tasksList.isEmpty) {
           _isPageEmpty = true;
@@ -152,9 +151,7 @@ class _HomePageState extends State<HomePage> {
                       builder: (context) =>
                           StatefulBuilder(builder: (context, statSetter) {
                             return AlertDialog(
-                              title: const Text(
-                                "Importance Level:"
-                              ),
+                                title: const Text("Importance Level:"),
                                 actionsAlignment: MainAxisAlignment.spaceEvenly,
                                 content: Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -163,19 +160,23 @@ class _HomePageState extends State<HomePage> {
                                         padding: const EdgeInsets.only(top: 8),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             ListTile(
                                               title: const Text(
                                                 "High Importance",
-                                                style: TextStyle(color: Colors.red),
+                                                style: TextStyle(
+                                                    color: Colors.red),
                                               ),
                                               leading: Radio(
-                                                value: ImportanceLevel.highImportance,
-                                                groupValue: _filteredImportanceLevel,
+                                                value: ImportanceLevel
+                                                    .highImportance,
+                                                groupValue:
+                                                    _filteredImportanceLevel,
                                                 onChanged: (newValue) {
                                                   statSetter(() {
-                                                    _filteredImportanceLevel = newValue;
+                                                    _filteredImportanceLevel =
+                                                        newValue;
                                                   });
                                                 },
                                               ),
@@ -183,16 +184,18 @@ class _HomePageState extends State<HomePage> {
                                             ListTile(
                                               title: const Text(
                                                 "Normal Importance",
-                                                style:
-                                                TextStyle(color: Colors.orange),
+                                                style: TextStyle(
+                                                    color: Colors.orange),
                                               ),
                                               leading: Radio(
-                                                value:
-                                                ImportanceLevel.normalImportance,
-                                                groupValue: _filteredImportanceLevel,
+                                                value: ImportanceLevel
+                                                    .normalImportance,
+                                                groupValue:
+                                                    _filteredImportanceLevel,
                                                 onChanged: (newValue) {
                                                   statSetter(() {
-                                                    _filteredImportanceLevel = newValue;
+                                                    _filteredImportanceLevel =
+                                                        newValue;
                                                   });
                                                 },
                                               ),
@@ -200,28 +203,32 @@ class _HomePageState extends State<HomePage> {
                                             ListTile(
                                               title: const Text(
                                                 "Low Importance",
-                                                style: TextStyle(color: Colors.green),
+                                                style: TextStyle(
+                                                    color: Colors.green),
                                               ),
                                               leading: Radio(
-                                                value: ImportanceLevel.lowImportance,
-                                                groupValue: _filteredImportanceLevel,
+                                                value: ImportanceLevel
+                                                    .lowImportance,
+                                                groupValue:
+                                                    _filteredImportanceLevel,
                                                 onChanged: (newValue) {
                                                   statSetter(() {
-                                                    _filteredImportanceLevel = newValue;
+                                                    _filteredImportanceLevel =
+                                                        newValue;
                                                   });
                                                 },
                                               ),
                                             ),
                                             ListTile(
-                                              title: const Text(
-                                                "No Filter"
-                                              ),
+                                              title: const Text("No Filter"),
                                               leading: Radio(
                                                 value: null,
-                                                groupValue: _filteredImportanceLevel,
+                                                groupValue:
+                                                    _filteredImportanceLevel,
                                                 onChanged: (newValue) {
                                                   statSetter(() {
-                                                    _filteredImportanceLevel = newValue;
+                                                    _filteredImportanceLevel =
+                                                        newValue;
                                                   });
                                                 },
                                               ),
@@ -263,78 +270,87 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 child: const Text("Cancel")),
                           ],
-                          title: const Text('Enter your task title'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                controller: _taskController,
-                                decoration: const InputDecoration(
-                                  labelText: "Task Title",
-                                  border: OutlineInputBorder(),
+                          title: const Text('Add your task'),
+                          content: SingleChildScrollView(
+                            child: Container(
+                              color: Colors.grey.shade100,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(height: 4),
+                                    TextField(
+                                      controller: _taskController,
+                                      decoration: const InputDecoration(
+                                        labelText: "Task Title",
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                    Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              "Importance Level:",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            ListTile(
+                                              title: const Text(
+                                                "High Importance",
+                                                style: TextStyle(color: Colors.red),
+                                              ),
+                                              leading: Radio(
+                                                value: ImportanceLevel.highImportance,
+                                                groupValue: importanceLevel,
+                                                onChanged: (newValue) {
+                                                  statSetter(() {
+                                                    importanceLevel = newValue!;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            ListTile(
+                                              title: const Text(
+                                                "Normal Importance",
+                                                style:
+                                                    TextStyle(color: Colors.orange),
+                                              ),
+                                              leading: Radio(
+                                                value:
+                                                    ImportanceLevel.normalImportance,
+                                                groupValue: importanceLevel,
+                                                onChanged: (newValue) {
+                                                  statSetter(() {
+                                                    importanceLevel = newValue!;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            ListTile(
+                                              title: const Text(
+                                                "Low Importance",
+                                                style: TextStyle(color: Colors.green),
+                                              ),
+                                              leading: Radio(
+                                                value: ImportanceLevel.lowImportance,
+                                                groupValue: importanceLevel,
+                                                onChanged: (newValue) {
+                                                  statSetter(() {
+                                                    importanceLevel = newValue!;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                  ],
                                 ),
                               ),
-                              Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Importance Level:",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      ListTile(
-                                        title: const Text(
-                                          "High Importance",
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                        leading: Radio(
-                                          value: ImportanceLevel.highImportance,
-                                          groupValue: importanceLevel,
-                                          onChanged: (newValue) {
-                                            statSetter(() {
-                                              importanceLevel = newValue!;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      ListTile(
-                                        title: const Text(
-                                          "Normal Importance",
-                                          style:
-                                              TextStyle(color: Colors.orange),
-                                        ),
-                                        leading: Radio(
-                                          value:
-                                              ImportanceLevel.normalImportance,
-                                          groupValue: importanceLevel,
-                                          onChanged: (newValue) {
-                                            statSetter(() {
-                                              importanceLevel = newValue!;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      ListTile(
-                                        title: const Text(
-                                          "Low Importance",
-                                          style: TextStyle(color: Colors.green),
-                                        ),
-                                        leading: Radio(
-                                          value: ImportanceLevel.lowImportance,
-                                          groupValue: importanceLevel,
-                                          onChanged: (newValue) {
-                                            statSetter(() {
-                                              importanceLevel = newValue!;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  )),
-                            ],
+                            ),
                           ));
                     }));
           },
@@ -399,8 +415,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               child: SizedBox(
                                 width: MediaQuery.sizeOf(context).width,
-                                height:
-                                    MediaQuery.sizeOf(context).height / 12,
+                                height: MediaQuery.sizeOf(context).height / 12,
                               ),
                             ),
                           ),
@@ -417,8 +432,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               child: SizedBox(
                                 width: MediaQuery.sizeOf(context).width,
-                                height:
-                                    MediaQuery.sizeOf(context).height / 12,
+                                height: MediaQuery.sizeOf(context).height / 12,
                               ),
                             ),
                           ),
@@ -435,8 +449,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               child: SizedBox(
                                 width: MediaQuery.sizeOf(context).width,
-                                height:
-                                    MediaQuery.sizeOf(context).height / 12,
+                                height: MediaQuery.sizeOf(context).height / 12,
                               ),
                             ),
                           ),
@@ -453,8 +466,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               child: SizedBox(
                                 width: MediaQuery.sizeOf(context).width,
-                                height:
-                                    MediaQuery.sizeOf(context).height / 12,
+                                height: MediaQuery.sizeOf(context).height / 12,
                               ),
                             ),
                           ),
@@ -471,8 +483,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               child: SizedBox(
                                 width: MediaQuery.sizeOf(context).width,
-                                height:
-                                    MediaQuery.sizeOf(context).height / 12,
+                                height: MediaQuery.sizeOf(context).height / 12,
                               ),
                             ),
                           ),
@@ -482,11 +493,10 @@ class _HomePageState extends State<HomePage> {
                       ? Column(
                           children: List.generate(length, (index) {
                             return Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                               child: InkWell(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(12)),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(12)),
                                 onLongPress: () {
                                   showDialog(
                                       context: context,
@@ -505,9 +515,8 @@ class _HomePageState extends State<HomePage> {
                                             ElevatedButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    _tasksList[length -
-                                                            index -
-                                                            1]
+                                                    _tasksList[
+                                                            length - index - 1]
                                                         .delete();
                                                     Navigator.pop(context);
                                                   });
@@ -539,27 +548,24 @@ class _HomePageState extends State<HomePage> {
                                   child: SizedBox(
                                     width: MediaQuery.sizeOf(context).width,
                                     height:
-                                        MediaQuery.sizeOf(context).height /
-                                            12,
+                                        MediaQuery.sizeOf(context).height / 12,
                                     child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          8, 0, 0, 0),
+                                      padding:
+                                          const EdgeInsets.fromLTRB(8, 0, 0, 0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Checkbox(
-                                              value: _tasksList[
-                                                      length - index - 1]
-                                                  .isDone,
+                                              value:
+                                                  _tasksList[length - index - 1]
+                                                      .isDone,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  _tasksList[
-                                                          length - index - 1]
+                                                  _tasksList[length - index - 1]
                                                       .isDone = value as bool;
-                                                  _tasksList[
-                                                          length - index - 1]
+                                                  _tasksList[length - index - 1]
                                                       .save();
                                                 });
                                               }),
@@ -569,9 +575,8 @@ class _HomePageState extends State<HomePage> {
                                               children: [
                                                 Flexible(
                                                   child: Text(
-                                                    _tasksList[length -
-                                                            index -
-                                                            1]
+                                                    _tasksList[
+                                                            length - index - 1]
                                                         .title,
                                                     style: const TextStyle(
                                                         fontSize: 16),
@@ -605,8 +610,7 @@ class _HomePageState extends State<HomePage> {
                                                   const BorderRadius.only(
                                                 topLeft: Radius.circular(0),
                                                 topRight: Radius.circular(12),
-                                                bottomLeft:
-                                                    Radius.circular(0),
+                                                bottomLeft: Radius.circular(0),
                                                 bottomRight:
                                                     Radius.circular(12),
                                               ),
@@ -622,12 +626,12 @@ class _HomePageState extends State<HomePage> {
                           }),
                         )
                       : const Padding(
-                        padding: EdgeInsets.only(top: 100),
-                        child: Icon(
-                          Icons.no_backpack_outlined,
-                          size: 256,
-                        ),
-                      )
+                          padding: EdgeInsets.only(top: 100),
+                          child: Icon(
+                            Icons.no_backpack_outlined,
+                            size: 256,
+                          ),
+                        )
             ],
           ),
         ));

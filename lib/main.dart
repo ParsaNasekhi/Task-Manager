@@ -19,9 +19,8 @@ Future<void> main() async {
 
 /*
 
-1- search
-2- time and date
-3- edit UI
+1- time and date
+2- edit UI
 
 */
 
