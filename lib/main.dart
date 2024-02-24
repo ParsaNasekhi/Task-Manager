@@ -85,22 +85,12 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
-        children: [
+        children: const [
           HomePage(),
           ListsPage(),
           DonePage(),
         ],
-      )
-      /*Builder(builder: (context) {
-        if (displayingPage == DisplayingPage.homePage) {
-          return const HomePage();
-        } else if (displayingPage == DisplayingPage.listsPage) {
-          return const ListsPage();
-        } else {
-          return const DonePage();
-        }
-      })*/
-      ,
+      ),
       bottomNavigationBar: BottomAppBar(
         elevation: 16,
         child: Row(

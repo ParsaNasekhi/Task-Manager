@@ -316,21 +316,29 @@ class _EditPageState extends State<EditPage> {
                   ),
                 ),
               ),
-              SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: TextButton(
-                      onPressed: () {
-                        DatePickerBdaya.showDatePicker(context,
-                            showTitleActions: true,
-                            minTime: DateTime(2024, 1, 1),
-                            maxTime: DateTime(2124, 1, 1), onConfirm: (date) {
-                          _helperTask.dateTime = date;
-                        }, currentTime: _task.dateTime, locale: LocaleType.fa);
-                      },
-                      child: const Text(
-                        'Click here to pick your task date',
-                        style: TextStyle(color: Colors.blue),
-                      ))),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 0, 14, 0),
+                child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              DatePickerBdaya.showDatePicker(context,
+                                  showTitleActions: true,
+                                  minTime: DateTime(2024, 1, 1),
+                                  maxTime: DateTime(2124, 1, 1), onConfirm: (date) {
+                                _helperTask.dateTime = date;
+                              }, currentTime: _task.dateTime, locale: LocaleType.fa);
+                            },
+                            child: const Text(
+                              'Click here to pick your task date',
+                              style: TextStyle(color: Colors.blue),
+                            )),
+                      ],
+                    )),
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
                 child: SizedBox(
