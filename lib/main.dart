@@ -59,6 +59,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   late DisplayingPage displayingPage;
+  final _pageController = PageController(initialPage: 0);
 
   @override
   void initState() {
@@ -68,8 +69,29 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    _pageController.addListener(() {
+      setState(() {
+        if (_pageController.page! >= 0 && _pageController.page! <= 0.5) {
+          displayingPage = DisplayingPage.homePage;
+        } else if (_pageController.page! > 0.5 &&
+            _pageController.page! <= 1.5) {
+          displayingPage = DisplayingPage.listsPage;
+        } else if (_pageController.page! > 1.5 && _pageController.page! <= 2) {
+          displayingPage = DisplayingPage.donePage;
+        }
+      });
+    });
+
     return Scaffold(
-      body: Builder(builder: (context) {
+      body: PageView(
+        controller: _pageController,
+        children: [
+          HomePage(),
+          ListsPage(),
+          DonePage(),
+        ],
+      )
+      /*Builder(builder: (context) {
         if (displayingPage == DisplayingPage.homePage) {
           return const HomePage();
         } else if (displayingPage == DisplayingPage.listsPage) {
@@ -77,7 +99,8 @@ class _MainPageState extends State<MainPage> {
         } else {
           return const DonePage();
         }
-      }),
+      })*/
+      ,
       bottomNavigationBar: BottomAppBar(
         elevation: 16,
         child: Row(
@@ -97,15 +120,18 @@ class _MainPageState extends State<MainPage> {
               onPressed: () {
                 setState(() {
                   displayingPage = DisplayingPage.homePage;
+                  _pageController.animateToPage(0,
+                      duration: const Duration(milliseconds: 320),
+                      curve: Curves.easeInOut);
                 });
               },
             ),
             IconButton(
               icon: Builder(builder: (context) {
                 if (displayingPage == DisplayingPage.listsPage) {
-                  return const Icon(
+                  return Icon(
                     Icons.list_alt_outlined,
-                    color: Colors.blue,
+                    color: Theme.of(context).primaryColor,
                   );
                 } else {
                   return const Icon(Icons.list_alt_outlined);
@@ -114,15 +140,18 @@ class _MainPageState extends State<MainPage> {
               onPressed: () {
                 setState(() {
                   displayingPage = DisplayingPage.listsPage;
+                  _pageController.animateToPage(1,
+                      duration: const Duration(milliseconds: 320),
+                      curve: Curves.easeInOut);
                 });
               },
             ),
             IconButton(
               icon: Builder(builder: (context) {
                 if (displayingPage == DisplayingPage.donePage) {
-                  return const Icon(
+                  return Icon(
                     Icons.done_outline,
-                    color: Colors.blue,
+                    color: Theme.of(context).primaryColor,
                   );
                 } else {
                   return const Icon(Icons.done_outline);
@@ -131,6 +160,9 @@ class _MainPageState extends State<MainPage> {
               onPressed: () {
                 setState(() {
                   displayingPage = DisplayingPage.donePage;
+                  _pageController.animateToPage(2,
+                      duration: const Duration(milliseconds: 320),
+                      curve: Curves.easeInOut);
                 });
               },
             ),
