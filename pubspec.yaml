@@ -42,6 +42,12 @@ dependencies:
   flutter_datetime_picker: ^1.5.1
   flutter_datetime_picker_bdaya: ^3.0.2
   smooth_page_indicator: ^1.1.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/ic_task_manager.png"
 
 dev_dependencies:
   flutter_test:
