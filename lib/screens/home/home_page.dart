@@ -354,7 +354,7 @@ class _HomePageState extends State<HomePage> {
                           ));
                     }));
           },
-          child: const Icon(Icons.add),
+          child: const Icon(Icons.add, color: Colors.white),
         ),
         body: SingleChildScrollView(
           child: Column(

@@ -41,6 +41,7 @@ dependencies:
   shimmer: ^3.0.0
   flutter_datetime_picker: ^1.5.1
   flutter_datetime_picker_bdaya: ^3.0.2
+  smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
   flutter_test:

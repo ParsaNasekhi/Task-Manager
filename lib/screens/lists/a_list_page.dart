@@ -207,7 +207,7 @@ class _AListPageState extends State<AListPage> {
                         ));
                   }));
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
       body: _isPageEmpty == null
           ? Shimmer.fromColors(

@@ -22,9 +22,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final Box<ListData> listBox = Hive.box<ListData>("ListBox");
-    if(listBox.values.toList().isEmpty) {
+    if (listBox.values.toList().isEmpty) {
       final ListData listData = ListData()..listName = "Default";
       listBox.add(listData);
     }
@@ -33,17 +32,23 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Task Manager',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.light(
+          background: Colors.white,
+          onBackground: Colors.black,
+          primary: Colors.deepPurple.shade700,
+          onPrimary: Colors.black12,
+          // seedColor: Colors.indigo,
+          surface: Colors.white,
+          onSurface: Colors.black,
+        ),
         useMaterial3: true,
       ),
       home: const MainPage(DisplayingPage.homePage),
     );
   }
-
 }
 
 class MainPage extends StatefulWidget {
-
   final DisplayingPage _displayingPage;
 
   const MainPage(this._displayingPage, {super.key});
@@ -81,9 +86,9 @@ class _MainPageState extends State<MainPage> {
             IconButton(
               icon: Builder(builder: (context) {
                 if (displayingPage == DisplayingPage.homePage) {
-                  return const Icon(
+                  return Icon(
                     Icons.home_outlined,
-                    color: Colors.blue,
+                    color: Theme.of(context).primaryColor,
                   );
                 } else {
                   return const Icon(Icons.home_outlined);

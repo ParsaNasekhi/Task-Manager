@@ -142,7 +142,7 @@ class _ListsPageState extends State<ListsPage> {
                         ));
                   }));
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
