@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker_bdaya/flutter_datetime_picker_bdaya.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:task_manager/db/list/list_data.dart';
 import 'package:task_manager/main.dart';
@@ -42,7 +43,8 @@ class _EditPageState extends State<EditPage> {
       ..isDone = _task.isDone
       ..importanceLevel = _task.importanceLevel
       ..details = _task.details
-      ..listName = _task.listName;
+      ..listName = _task.listName
+      ..dateTime = _task.dateTime;
     _taskDetailsController.text = _helperTask.details;
     listBox.values.toList().forEach((element) {
       listNameList.add(element.listName);
@@ -56,17 +58,14 @@ class _EditPageState extends State<EditPage> {
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context);
-        if(widget._sourcePage == "HomePage") {
+        if (widget._sourcePage == "HomePage") {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-                builder: (context) =>
-                const MainPage(DisplayingPage.homePage)),
+                builder: (context) => const MainPage(DisplayingPage.homePage)),
           );
         } else {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-                builder: (context) =>
-                AListPage(_oldListName)),
+            MaterialPageRoute(builder: (context) => AListPage(_oldListName)),
           );
         }
         return true;
@@ -131,7 +130,8 @@ class _EditPageState extends State<EditPage> {
                                                     onPressed: () {
                                                       Navigator.pop(context);
                                                     },
-                                                    child: const Text("Cancel")),
+                                                    child:
+                                                        const Text("Cancel")),
                                               ],
                                               title: const Text(
                                                   'Edit your task title'),
@@ -139,11 +139,13 @@ class _EditPageState extends State<EditPage> {
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   TextField(
-                                                    controller: _taskNameController,
+                                                    controller:
+                                                        _taskNameController,
                                                     decoration:
                                                         const InputDecoration(
                                                       labelText: "Task Title",
-                                                      border: OutlineInputBorder(),
+                                                      border:
+                                                          OutlineInputBorder(),
                                                     ),
                                                   ),
                                                 ],
@@ -248,52 +250,56 @@ class _EditPageState extends State<EditPage> {
                         });
                       },
                     ),
-                    ElevatedButton(onPressed: (){
-                      showDialog(
-                          context: context,
-                          builder: (context) => StatefulBuilder(
-                              builder: (context, statSetter) {
-                                return AlertDialog(
-                                    actionsAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                    actions: [
-                                      ElevatedButton(
-                                          onPressed: () {
-                                            if (_listNameController
-                                                .text.isNotEmpty) {
-                                              setState(() {
-                                                insertNewList(_listNameController.text);
-                                                listNameList.add(_listNameController.text);
-                                                _listNameController.text = "";
-                                                Navigator.of(context)
-                                                    .pop();
-                                              });
-                                            }
-                                          },
-                                          child: const Text("Add")),
-                                      ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text("Cancel")),
-                                    ],
-                                    title: const Text(
-                                        'Add New List'),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        TextField(
-                                          controller: _listNameController,
-                                          decoration:
-                                          const InputDecoration(
-                                            labelText: "List Name",
-                                            border: OutlineInputBorder(),
-                                          ),
-                                        ),
-                                      ],
-                                    ));
-                              }));
-                    }, child: const Text("New List"))
+                    ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => StatefulBuilder(
+                                      builder: (context, statSetter) {
+                                    return AlertDialog(
+                                        actionsAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        actions: [
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                if (_listNameController
+                                                    .text.isNotEmpty) {
+                                                  setState(() {
+                                                    insertNewList(
+                                                        _listNameController
+                                                            .text);
+                                                    listNameList.add(
+                                                        _listNameController
+                                                            .text);
+                                                    _listNameController.text =
+                                                        "";
+                                                    Navigator.of(context).pop();
+                                                  });
+                                                }
+                                              },
+                                              child: const Text("Add")),
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text("Cancel")),
+                                        ],
+                                        title: const Text('Add New List'),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TextField(
+                                              controller: _listNameController,
+                                              decoration: const InputDecoration(
+                                                labelText: "List Name",
+                                                border: OutlineInputBorder(),
+                                              ),
+                                            ),
+                                          ],
+                                        ));
+                                  }));
+                        },
+                        child: const Text("New List"))
                   ],
                 ),
               ),
@@ -310,20 +316,23 @@ class _EditPageState extends State<EditPage> {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.all(14),
-              //   child: SizedBox(
-              //     width: MediaQuery.of(context).size.width,
-              //     child: ElevatedButton(
-              //       onPressed: () {
-              //         DatePickerBdaya.showDatePicker(context);
-              //       },
-              //       child: const Text("Set Date & Time"),
-              //     ),
-              //   ),
-              // ),
+              SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: TextButton(
+                      onPressed: () {
+                        DatePickerBdaya.showDatePicker(context,
+                            showTitleActions: true,
+                            minTime: DateTime(2024, 1, 1),
+                            maxTime: DateTime(2124, 1, 1), onConfirm: (date) {
+                          _helperTask.dateTime = date;
+                        }, currentTime: _task.dateTime, locale: LocaleType.fa);
+                      },
+                      child: const Text(
+                        'Click here to pick your task date',
+                        style: TextStyle(color: Colors.blue),
+                      ))),
               Padding(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
@@ -333,7 +342,8 @@ class _EditPageState extends State<EditPage> {
                         ..isDone = _helperTask.isDone
                         ..importanceLevel = _helperTask.importanceLevel
                         ..details = _taskDetailsController.text
-                        ..listName = _helperTask.listName;
+                        ..listName = _helperTask.listName
+                        ..dateTime = _helperTask.dateTime;
                       _task.save();
                     },
                     child: const Text("Save Changes"),
@@ -349,8 +359,7 @@ class _EditPageState extends State<EditPage> {
 }
 
 void insertNewList(String name) {
-  final ListData listData = ListData()
-    ..listName = name;
+  final ListData listData = ListData()..listName = name;
   if (!listData.isInBox) {
     final Box<ListData> box = Hive.box<ListData>("ListBox");
     box.add(listData); // insert

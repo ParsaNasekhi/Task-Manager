@@ -20,6 +20,9 @@ class Task extends HiveObject {
   @HiveField(4)
   String details = "";
 
+  @HiveField(5)
+  DateTime dateTime = DateTime.now();
+
 }
 
 @HiveType(typeId: 1)

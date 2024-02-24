@@ -17,13 +17,6 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-/*
-
-1- time and date
-2- edit UI
-
-*/
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
