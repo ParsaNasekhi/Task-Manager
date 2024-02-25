@@ -337,8 +337,12 @@ class _AListPageState extends State<AListPage> {
                       });
                 },
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => EditPage(_tasksList[length - index - 1], "AListPage")),);
+                  if(!_tasksList[length - index - 1].isDone) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) =>
+                          EditPage(
+                              _tasksList[length - index - 1], "AListPage")),);
+                  }
                 },
                 child: Card(
                   shape: const RoundedRectangleBorder(
