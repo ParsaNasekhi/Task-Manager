@@ -41,7 +41,9 @@ class MyApp extends StatelessWidget {
           surface: Colors.white,
           onSurface: Colors.black,
         ),
-        checkboxTheme: CheckboxThemeData(checkColor: MaterialStateColor.resolveWith((states) => Colors.white)),
+        checkboxTheme: CheckboxThemeData(
+            checkColor:
+                MaterialStateColor.resolveWith((states) => Colors.white)),
         useMaterial3: true,
       ),
       home: const MainPage(DisplayingPage.homePage),
@@ -59,13 +61,19 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  late DisplayingPage displayingPage;
-  final _pageController = PageController(initialPage: 0);
+  late DisplayingPage _displayingPage;
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    displayingPage = widget._displayingPage;
+    _displayingPage = widget._displayingPage;
+    _pageController = PageController(
+        initialPage: _displayingPage == DisplayingPage.homePage
+            ? 0
+            : _displayingPage == DisplayingPage.listsPage
+                ? 1
+                : 2);
   }
 
   @override
@@ -73,12 +81,12 @@ class _MainPageState extends State<MainPage> {
     _pageController.addListener(() {
       setState(() {
         if (_pageController.page! >= 0 && _pageController.page! <= 0.5) {
-          displayingPage = DisplayingPage.homePage;
+          _displayingPage = DisplayingPage.homePage;
         } else if (_pageController.page! > 0.5 &&
             _pageController.page! <= 1.5) {
-          displayingPage = DisplayingPage.listsPage;
+          _displayingPage = DisplayingPage.listsPage;
         } else if (_pageController.page! > 1.5 && _pageController.page! <= 2) {
-          displayingPage = DisplayingPage.donePage;
+          _displayingPage = DisplayingPage.donePage;
         }
       });
     });
@@ -99,7 +107,7 @@ class _MainPageState extends State<MainPage> {
           children: [
             IconButton(
               icon: Builder(builder: (context) {
-                if (displayingPage == DisplayingPage.homePage) {
+                if (_displayingPage == DisplayingPage.homePage) {
                   return Icon(
                     Icons.home_outlined,
                     color: Theme.of(context).primaryColor,
@@ -110,7 +118,7 @@ class _MainPageState extends State<MainPage> {
               }),
               onPressed: () {
                 setState(() {
-                  displayingPage = DisplayingPage.homePage;
+                  _displayingPage = DisplayingPage.homePage;
                   _pageController.animateToPage(0,
                       duration: const Duration(milliseconds: 320),
                       curve: Curves.easeInOut);
@@ -119,7 +127,7 @@ class _MainPageState extends State<MainPage> {
             ),
             IconButton(
               icon: Builder(builder: (context) {
-                if (displayingPage == DisplayingPage.listsPage) {
+                if (_displayingPage == DisplayingPage.listsPage) {
                   return Icon(
                     Icons.list_alt_outlined,
                     color: Theme.of(context).primaryColor,
@@ -130,7 +138,7 @@ class _MainPageState extends State<MainPage> {
               }),
               onPressed: () {
                 setState(() {
-                  displayingPage = DisplayingPage.listsPage;
+                  _displayingPage = DisplayingPage.listsPage;
                   _pageController.animateToPage(1,
                       duration: const Duration(milliseconds: 320),
                       curve: Curves.easeInOut);
@@ -139,7 +147,7 @@ class _MainPageState extends State<MainPage> {
             ),
             IconButton(
               icon: Builder(builder: (context) {
-                if (displayingPage == DisplayingPage.donePage) {
+                if (_displayingPage == DisplayingPage.donePage) {
                   return Icon(
                     Icons.done_outline,
                     color: Theme.of(context).primaryColor,
@@ -150,7 +158,7 @@ class _MainPageState extends State<MainPage> {
               }),
               onPressed: () {
                 setState(() {
-                  displayingPage = DisplayingPage.donePage;
+                  _displayingPage = DisplayingPage.donePage;
                   _pageController.animateToPage(2,
                       duration: const Duration(milliseconds: 320),
                       curve: Curves.easeInOut);
