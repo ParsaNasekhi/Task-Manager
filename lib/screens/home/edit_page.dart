@@ -310,7 +310,8 @@ class _EditPageState extends State<EditPage> {
                   maxLines: 8,
                   decoration: InputDecoration(
                     alignLabelWithHint: true,
-                    labelText: "Details (for ${_helperTask.dateTime.month}/${_helperTask.dateTime.day}/${_helperTask.dateTime.year})",
+                    labelText:
+                        "Details (for ${_helperTask.dateTime.month}/${_helperTask.dateTime.day}/${_helperTask.dateTime.year})",
                     labelStyle: TextStyle(),
                     border: OutlineInputBorder(),
                   ),
@@ -328,11 +329,14 @@ class _EditPageState extends State<EditPage> {
                               DatePickerBdaya.showDatePicker(context,
                                   showTitleActions: true,
                                   minTime: DateTime(2024, 1, 1),
-                                  maxTime: DateTime(2124, 1, 1), onConfirm: (date) {
+                                  maxTime: DateTime(2124, 1, 1),
+                                  onConfirm: (date) {
                                 setState(() {
                                   _helperTask.dateTime = date;
                                 });
-                              }, currentTime: _helperTask.dateTime, locale: LocaleType.en);
+                              },
+                                  currentTime: _helperTask.dateTime,
+                                  locale: LocaleType.en);
                             },
                             child: const Text(
                               'Click here to pick your task date',
