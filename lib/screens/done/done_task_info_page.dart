@@ -27,7 +27,8 @@ class DoneTaskInfoPage extends StatelessWidget {
       ..isDone = _task.isDone
       ..importanceLevel = _task.importanceLevel
       ..details = _task.details
-      ..listName = _task.listName;
+      ..listName = _task.listName
+      ..dateTime = _task.dateTime;
     _taskDetailsController.text = _helperTask.details;
     listBox.values.toList().forEach((element) {
       listNameList.add(element.listName);
@@ -160,11 +161,11 @@ class DoneTaskInfoPage extends StatelessWidget {
                   enabled: false,
                   controller: _taskDetailsController,
                   maxLines: 8,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     alignLabelWithHint: true,
-                    labelText: "Details",
-                    labelStyle: TextStyle(),
-                    border: OutlineInputBorder(),
+                    labelText: "Details (done on ${_helperTask.dateTime.month}/${_helperTask.dateTime.day}/${_helperTask.dateTime.year})",
+                    labelStyle: const TextStyle(),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ),
@@ -175,4 +176,3 @@ class DoneTaskInfoPage extends StatelessWidget {
     );
   }
 }
-

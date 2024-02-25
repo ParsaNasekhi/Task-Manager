@@ -312,8 +312,8 @@ class _EditPageState extends State<EditPage> {
                     alignLabelWithHint: true,
                     labelText:
                         "Details (for ${_helperTask.dateTime.month}/${_helperTask.dateTime.day}/${_helperTask.dateTime.year})",
-                    labelStyle: TextStyle(),
-                    border: OutlineInputBorder(),
+                    labelStyle: const TextStyle(),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ),
