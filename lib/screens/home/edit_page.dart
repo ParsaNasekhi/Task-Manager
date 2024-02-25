@@ -308,9 +308,9 @@ class _EditPageState extends State<EditPage> {
                 child: TextField(
                   controller: _taskDetailsController,
                   maxLines: 8,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     alignLabelWithHint: true,
-                    labelText: "Details",
+                    labelText: "Details (for ${_helperTask.dateTime.month}/${_helperTask.dateTime.day}/${_helperTask.dateTime.year})",
                     labelStyle: TextStyle(),
                     border: OutlineInputBorder(),
                   ),
@@ -329,8 +329,10 @@ class _EditPageState extends State<EditPage> {
                                   showTitleActions: true,
                                   minTime: DateTime(2024, 1, 1),
                                   maxTime: DateTime(2124, 1, 1), onConfirm: (date) {
-                                _helperTask.dateTime = date;
-                              }, currentTime: _task.dateTime, locale: LocaleType.en);
+                                setState(() {
+                                  _helperTask.dateTime = date;
+                                });
+                              }, currentTime: _helperTask.dateTime, locale: LocaleType.en);
                             },
                             child: const Text(
                               'Click here to pick your task date',
