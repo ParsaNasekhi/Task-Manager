@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:task_manager/screens/done/done_task_info_page.dart';
-import 'package:task_manager/screens/home/edit_page.dart';
 
 import '../../../db/task/task_data.dart';
 
