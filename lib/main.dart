@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
           surface: Colors.white,
           onSurface: Colors.black,
         ),
+        checkboxTheme: CheckboxThemeData(checkColor: MaterialStateColor.resolveWith((states) => Colors.white)),
         useMaterial3: true,
       ),
       home: const MainPage(DisplayingPage.homePage),

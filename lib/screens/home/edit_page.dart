@@ -330,7 +330,7 @@ class _EditPageState extends State<EditPage> {
                                   minTime: DateTime(2024, 1, 1),
                                   maxTime: DateTime(2124, 1, 1), onConfirm: (date) {
                                 _helperTask.dateTime = date;
-                              }, currentTime: _task.dateTime, locale: LocaleType.fa);
+                              }, currentTime: _task.dateTime, locale: LocaleType.en);
                             },
                             child: const Text(
                               'Click here to pick your task date',
